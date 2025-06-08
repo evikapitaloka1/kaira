@@ -1202,59 +1202,89 @@
 
         // Render articles with fade-in animation
         function renderArticles(articlesToRender = articles) {
-            const grid = document.getElementById('articlesGrid');
-            grid.innerHTML = '';
+    const grid = document.getElementById('articlesGrid');
+    
+    // Check if grid exists
+    if (!grid) {
+        console.error('Error: #articlesGrid element not found in DOM');
+        return;
+    }
 
-            if (articlesToRender.length === 0) {
-                grid.innerHTML = `
-                    <div class="no-articles" style="grid-column: 1 / -1;">
-                        <div class="no-articles-icon">📝</div>
-                        <div class="no-articles-text">No Articles Found</div>
-                        <div class="no-articles-subtext">Check back later for new content or try a different filter</div>
-                    </div>
-                `;
-                return;
-            }
+    // Check if articlesToRender is valid
+    if (!articlesToRender || !Array.isArray(articlesToRender)) {
+        console.warn('Invalid articles array:', articlesToRender);
+        grid.innerHTML = `
+            <div class="no-articles" style="grid-column: 1 / -1;">
+                <div class="no-articles-icon">📝</div>
+                <div class="no-articles-text">No Articles Found</div>
+                <div class="no-articles-subtext">Check back later for new content or try a different filter</div>
+            </div>
+        `;
+        return;
+    }
 
-            articlesToRender.forEach((article, index) => {
-                const articleCard = document.createElement('div');
-                articleCard.className = 'article-card fade-in';
-                articleCard.style.transitionDelay = `${index * 50}ms`;
-                
-                articleCard.innerHTML = `
-                    <div class="article-image-container">
-                        <img src="${article.image}" alt="${article.title}" class="article-image">
-                        <div class="article-category">${article.category}</div>
-                    </div>
-                    <div class="article-info">
-                        <h3 class="article-title">${article.title}</h3>
-                        <p class="article-excerpt">${article.excerpt}</p>
-                        <div class="article-meta">
-                            <span class="article-date">${formatDate(article.date)}</span>
-                            <span class="article-author">By ${article.author}</span>
-                        </div>
-                    </div>
-                `;
-                
-                // Add click event with animation
-                articleCard.addEventListener('click', function() {
-                    animateArticleClick(this);
-                    setTimeout(() => {
-                        goToArticle(article.id);
-                    }, 300);
-                });
-                
-                grid.appendChild(articleCard);
-            });
+    // Clear grid
+    grid.innerHTML = '';
 
-            // Trigger fade-in animations
-            setTimeout(() => {
-                document.querySelectorAll('.article-card').forEach(card => {
-                    card.classList.add('visible');
-                });
-            }, 50);
+    // Check if articlesToRender is empty
+    if (articlesToRender.length === 0) {
+        console.warn('No articles to render:', articlesToRender);
+        grid.innerHTML = `
+            <div class="no-articles" style="grid-column: 1 / -1;">
+                <div class="no-articles-icon">📝</div>
+                <div class="no-articles-text">No Articles Found</div>
+                <div class="no-articles-subtext">Check back later for new content or try a different filter</div>
+            </div>
+        `;
+        return;
+    }
+
+    console.log('Rendering articles:', articlesToRender.length, articlesToRender); // Debug
+
+    articlesToRender.forEach((article, index) => {
+        // Validate article object
+        if (!article || !article.id || !article.title || !article.image || !article.category || !article.excerpt || !article.date || !article.author) {
+            console.warn('Invalid article at index', index, article);
+            return; // Skip invalid article
         }
 
+        const articleCard = document.createElement('div');
+        articleCard.className = 'article-card fade-in';
+        articleCard.style.transitionDelay = `${index * 50}ms`;
+        
+        articleCard.innerHTML = `
+            <div class="article-image-container">
+                <img src="${article.image}" alt="${article.title}" class="article-image">
+                <div class="article-category">${article.category}</div>
+            </div>
+            <div class="article-info">
+                <h3 class="article-title">${article.title}</h3>
+                <p class="article-excerpt">${article.excerpt}</p>
+                <div class="article-meta">
+                    <span class="article-date">${formatDate(article.date)}</span>
+                    <span class="article-author">By ${article.author}</span>
+                </div>
+            </div>
+        `;
+        
+        // Add click event with animation
+        articleCard.addEventListener('click', function() {
+            animateArticleClick(this);
+            setTimeout(() => {
+                goToArticle(article.id);
+            }, 300);
+        });
+        
+        grid.appendChild(articleCard);
+    });
+
+    // Trigger fade-in animations
+    setTimeout(() => {
+        document.querySelectorAll('.article-card').forEach(card => {
+            card.classList.add('visible');
+        });
+    }, 50);
+}
         // Format date
         function formatDate(dateString) {
             const options = { year: 'numeric', month: 'short', day: 'numeric' };
@@ -1644,7 +1674,29 @@ function viewArticleDetails(articleId) {
         window.location.href = `detail-artikel${articleId}.html`;
     }, 300);
 }
+function initializeArticles() {
+    let articles = [];
+    const savedArticles = localStorage.getItem('kaira_articles');
+    console.log('savedArticles from localStorage:', savedArticles); // Debug
 
+    if (savedArticles) {
+        try {
+            articles = JSON.parse(savedArticles);
+            console.log(`Loaded ${articles.length} articles from localStorage`);
+        } catch (e) {
+            console.error('Error parsing localStorage articles:', e);
+            articles = sampleArticles; // Fallback to sampleArticles
+            localStorage.setItem('kaira_articles', JSON.stringify(sampleArticles));
+        }
+    } else {
+        articles = sampleArticles; // Fallback to sampleArticles
+        console.log('No articles in localStorage, using sampleArticles:', articles);
+        localStorage.setItem('kaira_articles', JSON.stringify(sampleArticles));
+    }
+
+    console.log('Initialized articles:', articles); // Debug
+    renderArticles(articles);
+}
     </script>
 </body>
 </html>
