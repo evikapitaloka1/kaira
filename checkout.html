@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAIRA - Checkout</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family:  'Helvetica Neue', Arial, sans-serif;;
+            background-color: #ffffff;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #000;
+            margin-bottom: 20px;
+            animation: fadeIn 1.5s ease;
+        }
+
+        .loading-text {
+            font-size: 12px;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #000;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .left-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .hamburger {
+            cursor: pointer;
+            padding: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 20px;
+            height: 2px;
+            background: #000;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #000;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #000;
+            text-transform: uppercase;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #666;
+        }
+
+        .search-box {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            width: 120px;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            font-size: 11px;
+            width: 100%;
+            color: #000;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: transparent;
+        }
+
+        .search-box input::placeholder {
+            color: #999;
+        }
+
+        .cart-icon, .wishlist-icon {
+            position: relative;
+            cursor: pointer;
+            padding: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .cart-icon:hover, .wishlist-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .cart-count, .wishlist-count {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: #000;
+            color: #fff;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 600;
+            transform: scale(0);
+            transition: transform 0.3s ease;
+        }
+
+        .cart-count.show, .wishlist-count.show {
+            transform: scale(1);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            z-index: 200;
+            transition: left 0.3s ease;
+            padding: 80px 30px 30px;
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar ul li {
+            margin: 25px 0;
+        }
+
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #000;
+            font-size: 16px;
+            text-transform: uppercase;
+            font-weight: 500;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+            display: block;
+            padding: 10px 0;
+        }
+
+        .sidebar ul li a:hover {
+            color: #666;
+        }
+
+        .sidebar-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #000;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Overlay for sidebar */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 150;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        /* Checkout Header */
+        .checkout-header {
+            text-align: center;
+            margin: 40px 0 30px;
+            width: 100%;
+        }
+
+        .checkout-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #000;
+            margin-bottom: 10px;
+        }
+
+        .checkout-subtitle {
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 300;
+        }
+
+        /* Checkout Form */
+        .checkout-form {
+            flex: 2;
+            min-width: 300px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #000;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            background: #fff;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #000;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .payment-methods {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .payment-option {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s ease, background 0.3s ease;
+        }
+
+        .payment-option input {
+            display: none;
+        }
+
+        .payment-option label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .payment-option input:checked + label {
+            color: #000;
+            font-weight: 600;
+        }
+
+        .payment-option input:checked ~ .payment-option {
+            border-color: #000;
+            background: #f8f9fa;
+        }
+
+        /* Order Summary */
+        .order-summary {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            margin-bottom: 30px;
+        }
+
+        .order-summary-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #000;
+            margin-bottom: 15px;
+        }
+
+        .order-item {
+            display: flex;
+            gap: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .order-item-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .order-item-info {
+            flex: 1;
+        }
+
+        .order-item-name {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #000;
+            margin-bottom: 5px;
+        }
+
+        .order-item-price {
+            font-size: 12px;
+            color: #333;
+        }
+
+        .order-item-quantity {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .order-summary-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 10px 0;
+        }
+
+        .order-summary-total {
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .confirm-btn {
+            width: 100%;
+            padding: 12px;
+            background: #000;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .confirm-btn:hover {
+            background: #333;
+        }
+
+        /* Wishlist Panel */
+        .side-panel {
+            position: fixed;
+            top: 0;
+            right: -350px;
+            width: 350px;
+            height: 100vh;
+            background: #fff;
+            box-shadow: -3px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .side-panel.active {
+            right: 0;
+        }
+
+        .panel-header {
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+        }
+
+        .panel-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #000;
+        }
+
+        .panel-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .panel-content {
+            padding: 20px;
+        }
+
+        .panel-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .panel-item-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .panel-item-info {
+            flex: 1;
+        }
+
+        .panel-item-name {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+            color: #000;
+        }
+
+        .panel-item-price {
+            font-size: 14px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 8px;
+        }
+
+        .panel-item-remove {
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .panel-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .panel-empty-icon {
+            font-size: 36px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .panel-empty-text {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #000;
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 10001;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                padding: 12px 20px;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .main-content {
+                padding: 0 20px;
+                flex-direction: column;
+            }
+
+            .checkout-title {
+                font-size: 28px;
+            }
+
+            .form-row {
+                flex-direction: column;
+            }
+
+            .payment-methods {
+                flex-direction: column;
+            }
+
+            .side-panel {
+                width: 100%;
+                right: -100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .checkout-title {
+                font-size: 24px;
+            }
+
+            .form-section-title,
+            .order-summary-title {
+                font-size: 16px;
+            }
+
+            .form-group input,
+            .form-group select {
+                font-size: 12px;
+            }
+
+            .order-item-name,
+            .order-item-price,
+            .order-item-quantity {
+                font-size: 10px;
+            }
+
+            .order-summary-item {
+                font-size: 10px;
+            }
+
+            .order-summary-total {
+                font-size: 12px;
+            }
+        }
+        /* Popup Overlay */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Popup Content */
+        .popup-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Checkmark Animation */
+        .checkmark-circle {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .checkmark-circle .background {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: #4CAF50;
+            position: absolute;
+        }
+
+        .checkmark-circle .checkmark {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            fill: none;
+            stroke: white;
+            stroke-width: 8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            animation: stroke 0.6s ease-in-out forwards;
+        }
+
+        @keyframes stroke {
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        /* Star Rating */
+        .star-rating {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .star {
+            font-size: 30px;
+            color: #ccc;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .star:hover,
+        .star.selected {
+            color: #ffd700;
+        }
+
+        .submit-rating {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .submit-rating:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-logo">KAIRA</div>
+        <div class="loading-text">Checkout</div>
+        <div class="loading-spinner"></div>
+    </div>
+    <!-- Loading Animation -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="left-header">
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="logo" onclick="goHome()">KAIRA</div>
+        </div>
+        <nav class="nav-links">
+            <div class="search-box">
+                <input type="text" placeholder="Search" id="searchInput">
+            </div>
+            <a href="#" onclick="showLogin()">Login</a>
+            <a href="#" onclick="showHelp()">Help</a>
+            <div class="wishlist-icon" onclick="goToWishlist()">
+                <span style="font-size: 14px;">♡</span>
+                <div class="wishlist-count" id="wishlistCount">0</div>
+            </div>
+            <div class="cart-icon" onclick="goToCart()">
+                <span style="font-size: 14px;">🛒</span>
+                <div class="cart-count" id="cartCount">0</div>
+            </div>
+        </nav>
+    </header>
+
+      <!-- Sidebar Menu -->
+    <nav class="sidebar" id="sidebar">
+        <button class="sidebar-close" onclick="toggleMenu()" aria-label="Close menu">×</button>
+        <ul>
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="match.html">STYLE RECOMENDATION</a></li>
+            <li><a href="produk.html">PRODUK</a></li>
+            <li><a href="artikel.html">ARTICLE</a></li>
+            <li><a href="about.html">ABOUT KAIRA</a></li>
+            <li><a href="contact.html">CONTACT</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="checkout-header">
+            <h1 class="checkout-title">Checkout</h1>
+            <p class="checkout-subtitle">Complete your order details</p>
+        </div>
+
+        <div class="checkout-form">
+            <div class="form-section">
+                <h2 class="form-section-title">Billing Details</h2>
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" placeholder="Enter your phone number" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" placeholder="Enter your address" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" placeholder="Enter your city" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="postalCode">Postal Code</label>
+                        <input type="text" id="postalCode" placeholder="Enter postal code" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2 class="form-section-title">Payment Method</h2>
+                <div class="payment-methods">
+                    <div class="payment-option">
+                        <input type="radio" id="creditCard" name="paymentMethod" value="creditCard" required>
+                        <label for="creditCard">Credit Card</label>
+                    </div>
+                    <div class="payment-option">
+                        <input type="radio" id="bankTransfer" name="paymentMethod" value="bankTransfer">
+                        <label for="bankTransfer">Bank Transfer</label>
+                    </div>
+                    <div class="payment-option">
+                        <input type="radio" id="eWallet" name="paymentMethod" value="eWallet">
+                        <label for="eWallet">E-Wallet</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="order-summary" id="orderSummary">
+            <h2 class="order-summary-title">Order Summary</h2>
+            <div id="orderItems"></div>
+            <div class="order-summary-item">
+                <span>Subtotal</span>
+                <span id="subtotal">Rp 0</span>
+            </div>
+            <div class="order-summary-item">
+                <span>Shipping</span>
+                <span id="shipping">TBD</span>
+            </div>
+            <div class="order-summary-total">
+                <span>Total</span>
+                <span id="total">Rp 0</span>
+            </div>
+            <button class="confirm-btn" onclick="confirmOrder()">Confirm Order</button>
+        </div>
+    </div>
+
+    <!-- Wishlist Panel -->
+    <div class="side-panel" id="wishlistPanel">
+        <div class="panel-header">
+            <h2 class="panel-title">Wishlist</h2>
+            <button class="panel-close" onclick="toggleWishlist()">×</button>
+        </div>
+        <div class="panel-content" id="wishlistContent">
+            <div class="panel-empty">
+                <div class="panel-empty-icon">♡</div>
+                <div class="panel-empty-text">Your wishlist is empty</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+     <!-- Popup HTML -->
+    <div id="successPopup" class="popup-overlay">
+        <div class="popup-content">
+            <div class="checkmark-circle">
+                <div class="background"></div>
+                <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                    <path class="checkmark" d="M14 27l8 8 16-16"/>
+                </svg>
+            </div>
+            <h2>Order Successful!</h2>
+            <p>Your order has been successfully placed.</p>
+            <div class="star-rating" id="starRating">
+                <span class="star" data-value="1">&#9733;</span>
+                <span class="star" data-value="2">&#9733;</span>
+                <span class="star" data-value="3">&#9733;</span>
+                <span class="star" data-value="4">&#9733;</span>
+                <span class="star" data-value="5">&#9733;</span>
+            </div>
+            <button class="submit-rating" id="submitRating">Submit Rating</button>
+        </div>
+    </div>
+   <script>
+        // Global variables
+        let cart = [];
+        let wishlist = [];
+        
+        // Loading screen
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+                loadCartAndWishlist();
+                renderOrderSummary();
+            }, 2000);
+        });
+
+        // Render order summary
+        function renderOrderSummary() {
+            const orderItems = document.getElementById('orderItems');
+            const subtotalElement = document.getElementById('subtotal');
+            const totalElement = document.getElementById('total');
+            
+            if (cart.length === 0) {
+                orderItems.innerHTML = `
+                    <div style="text-align: center; padding: 20px 0; color: #666;">
+                        <div style="font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">
+                            Your cart is empty
+                        </div>
+                    </div>
+                `;
+                subtotalElement.textContent = 'Rp 0';
+                totalElement.textContent = 'Rp 0';
+                return;
+            }
+            
+            let orderHTML = '';
+            let subtotal = 0;
+            
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                subtotal += itemTotal;
+                orderHTML += `
+                    <div class="order-item">
+                        <img src="${item.image}" alt="${item.name}" class="order-item-image">
+                        <div class="order-item-info">
+                            <div class="order-item-name">${item.name}</div>
+                            <div class="order-item-price">Rp ${itemTotal.toLocaleString()}</div>
+                            <div class="order-item-quantity">Quantity: ${item.quantity}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            orderItems.innerHTML = orderHTML;
+            subtotalElement.textContent = `Rp ${subtotal.toLocaleString()}`;
+            totalElement.textContent = `Rp ${subtotal.toLocaleString()}`;
+            updateCartCount();
+        }
+
+        // Update cart count
+        function updateCartCount() {
+            const countElement = document.getElementById('cartCount');
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            countElement.textContent = totalItems;
+            countElement.classList.toggle('show', totalItems > 0);
+        }
+
+        // Update wishlist count
+        function updateWishlistCount() {
+            const countElement = document.getElementById('wishlistCount');
+            countElement.textContent = wishlist.length;
+            countElement.classList.toggle('show', wishlist.length > 0);
+        }
+
+        // Render wishlist
+        function renderWishlist() {
+            const wishlistContent = document.getElementById('wishlistContent');
+            
+            if (wishlist.length === 0) {
+                wishlistContent.innerHTML = `
+                    <div class="panel-empty">
+                        <div class="panel-empty-icon">♡</div>
+                        <div class="panel-empty-text">Your wishlist is empty</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            let wishlistHTML = '';
+            
+            wishlist.forEach(item => {
+                wishlistHTML += `
+                    <div class="panel-item">
+                        <img src="${item.image}" alt="${item.name}" class="panel-item-image">
+                        <div class="panel-item-info">
+                            <div class="panel-item-name">${item.name}</div>
+                            <div class="panel-item-price">Rp ${item.price.toLocaleString()}</div>
+                            <button class="panel-item-remove" onclick="removeFromWishlist(${item.id})">Remove</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            wishlistContent.innerHTML = wishlistHTML;
+        }
+
+        // Remove from wishlist
+        function removeFromWishlist(itemId) {
+            const itemIndex = wishlist.findIndex(item => item.id === itemId);
+            if (itemIndex > -1) {
+                const item = wishlist[itemIndex];
+                wishlist.splice(itemIndex, 1);
+                updateWishlistCount();
+                renderWishlist();
+                saveCartAndWishlist();
+                showNotification(`${item.name} removed from wishlist!`);
+            }
+        }
+
+        // Toggle wishlist
+        function toggleWishlist() {
+            const wishlistPanel = document.getElementById('wishlistPanel');
+            wishlistPanel.classList.toggle('active');
+            renderWishlist();
+        }
+
+        // Toggle menu
+        function toggleMenu() {
+            const hamburger = document.querySelector('.hamburger');
+            const sidebar = document.getElementById('sidebar');
+
+            hamburger.classList.toggle('active');
+            sidebar.classList.toggle('active');
+
+            const spans = hamburger.querySelectorAll('span');
+            if (hamburger.classList.contains('active')) {
+                spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                spans[1].style.opacity = '0';
+                spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+            } else {
+                spans[0].style.transform = 'none';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = 'none';
+            }
+        }
+
+        // Show notification
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2500);
+        }
+
+        // Save cart and wishlist
+        function saveCartAndWishlist() {
+            localStorage.setItem('kaira_cart', JSON.stringify(cart));
+            localStorage.setItem('kaira_wishlist', JSON.stringify(wishlist));
+        }
+
+        // Load cart and wishlist
+        function loadCartAndWishlist() {
+            const savedCart = localStorage.getItem('kaira_cart');
+            const savedWishlist = localStorage.getItem('kaira_wishlist');
+            
+            if (savedCart) {
+                cart = JSON.parse(savedCart);
+                updateCartCount();
+            }
+            
+            if (savedWishlist) {
+                wishlist = JSON.parse(savedWishlist);
+                updateWishlistCount();
+            }
+        }
+
+        // Save transaction to localStorage for admin panel
+        function saveTransaction(transactionData) {
+            try {
+                let transactions = [];
+                const savedTransactions = localStorage.getItem('kaira_transactions');
+                if (savedTransactions) {
+                    transactions = JSON.parse(savedTransactions);
+                }
+                
+                // Add new transaction
+                transactions.push(transactionData);
+                
+                // Save back to localStorage
+                localStorage.setItem('kaira_transactions', JSON.stringify(transactions));
+                console.log('Transaction saved successfully:', transactionData);
+            } catch (error) {
+                console.error('Error saving transaction:', error);
+            }
+        }
+
+        // Confirm order function
+        function confirmOrder() {
+            if (cart.length === 0) {
+                showNotification('Your cart is empty!');
+                return;
+            }
+
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const address = document.getElementById('address').value.trim();
+            const city = document.getElementById('city').value.trim();
+            const postalCode = document.getElementById('postalCode').value.trim();
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+
+            if (!fullName || !email || !phone || !address || !city || !postalCode || !paymentMethod) {
+                showNotification('Please fill in all required fields!');
+                return;
+            }
+
+            const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+            
+            // Create transaction data for admin panel
+            const transactionData = {
+                id: Date.now(), // Simple ID generation
+                customer: fullName,
+                customerInfo: {
+                    email: email,
+                    phone: phone,
+                    address: `${address}, ${city} ${postalCode}`
+                },
+                products: cart.map(item => ({
+                    name: item.name,
+                    quantity: item.quantity,
+                    price: item.price
+                })),
+                totalAmount: total,
+                paymentMethod: paymentMethod.value.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()),
+                status: 'pending',
+                date: new Date().toISOString().split('T')[0]
+            };
+
+            // Save transaction for admin panel
+            saveTransaction(transactionData);
+
+            showNotification(`Order confirmed! Total: Rp ${total.toLocaleString()}`);
+
+            // Clear cart and form
+            cart = [];
+            updateCartCount();
+            saveCartAndWishlist();
+            renderOrderSummary();
+            document.getElementById('fullName').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('phone').value = '';
+            document.getElementById('address').value = '';
+            document.getElementById('city').value = '';
+            document.getElementById('postalCode').value = '';
+            if (paymentMethod) paymentMethod.checked = false;
+
+            // Show popup
+            const popup = document.getElementById('successPopup');
+            popup.style.display = 'flex';
+
+            // Star rating logic
+            let selectedRating = 0;
+            const stars = document.querySelectorAll('.star');
+            stars.forEach(star => {
+                star.addEventListener('click', () => {
+                    selectedRating = parseInt(star.getAttribute('data-value'));
+                    stars.forEach(s => {
+                        s.classList.remove('selected');
+                        if (parseInt(s.getAttribute('data-value')) <= selectedRating) {
+                            s.classList.add('selected');
+                        }
+                    });
+                });
+            });
+
+            // Submit rating and redirect
+            document.getElementById('submitRating').addEventListener('click', () => {
+                if (selectedRating === 0) {
+                    showNotification('Please select a rating!');
+                    return;
+                }
+                // Here you can add logic to save the rating if needed
+                popup.style.display = 'none';
+                window.location.href = 'index.html';
+            });
+        }
+
+        // Navigation functions
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+
+        function showLogin() {
+            window.location.href = 'login.html';
+        }
+
+        function showHelp() {
+            showNotification('Contact customer service at help@kaira.com');
+        }
+
+        function goToCart() {
+            window.location.href = 'cart.html';
+        }
+
+        function goToWishlist() {
+            window.location.href = 'wishlist.html';
+        }
+
+        // Close panels when clicking outside
+        document.addEventListener('click', function(e) {
+            const wishlistPanel = document.getElementById('wishlistPanel');
+            const wishlistIcon = document.querySelector('.wishlist-icon');
+            const sidebar = document.getElementById('sidebar');
+            const hamburger = document.querySelector('.hamburger');
+            
+            if (!wishlistPanel.contains(e.target) && !wishlistIcon.contains(e.target)) {
+                wishlistPanel.classList.remove('active');
+            }
+            
+            if (!sidebar.contains(e.target) && !hamburger.contains(e.target) && sidebar.classList.contains('active')) {
+                toggleMenu();
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.getElementById('wishlistPanel').classList.remove('active');
+                if (document.getElementById('sidebar').classList.contains('active')) {
+                    toggleMenu();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

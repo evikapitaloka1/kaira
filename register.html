@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAIRA - Choose Your Role</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            color: #000;
+            line-height: 1.4;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 60px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #000;
+            margin-bottom: 20px;
+            animation: logoFadeIn 2s ease-in-out;
+        }
+
+        .loading-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #666;
+            margin-bottom: 30px;
+            animation: textSlideUp 2s ease-in-out 0.5s both;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #000;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes logoFadeIn {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes textSlideUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Main Container */
+        .main-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: containerFadeIn 1s ease-out 2.5s both;
+        }
+
+        @keyframes containerFadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Role Selection Card */
+        .role-selection-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 60px 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Header */
+        .header-section {
+            margin-bottom: 50px;
+        }
+
+        .main-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #000;
+            margin-bottom: 15px;
+            animation: logoSlideIn 0.8s ease-out 3s both;
+        }
+
+        @keyframes logoSlideIn {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            font-weight: 300;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            animation: subtitleSlideIn 0.8s ease-out 3.2s both;
+        }
+
+        @keyframes subtitleSlideIn {
+            0% { opacity: 0; transform: translateY(-15px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .description {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: #888;
+            line-height: 1.6;
+            max-width: 400px;
+            margin: 0 auto;
+            animation: descriptionFadeIn 0.8s ease-out 3.4s both;
+        }
+
+        @keyframes descriptionFadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* Role Options */
+        .role-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .role-option {
+            background: #fff;
+            border: 2px solid #f0f0f0;
+            border-radius: 15px;
+            padding: 40px 20px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            animation: roleOptionSlideIn 0.8s ease-out both;
+        }
+
+        .role-option:nth-child(1) { animation-delay: 3.6s; }
+        .role-option:nth-child(2) { animation-delay: 3.8s; }
+
+        @keyframes roleOptionSlideIn {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .role-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .role-option:hover::before {
+            left: 100%;
+        }
+
+        .role-option:hover {
+            border-color: #000;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .role-option.selected {
+            border-color: #000;
+            background: #000;
+            color: #fff;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .role-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .role-option:hover .role-icon {
+            transform: scale(1.1);
+        }
+
+        .role-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .role-description {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 1.5;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .role-option:hover .role-description,
+        .role-option.selected .role-description {
+            opacity: 1;
+        }
+
+        /* Action Buttons */
+        .action-section {
+            animation: actionSectionFadeIn 0.8s ease-out 4s both;
+        }
+
+        @keyframes actionSectionFadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .continue-btn {
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 15px;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .continue-btn.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .continue-btn:hover {
+            background: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-btn {
+            background: transparent;
+            color: #666;
+            border: 2px solid #e0e0e0;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            border-color: #000;
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        .footer-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #f0f0f0;
+            animation: footerFadeIn 0.8s ease-out 4.2s both;
+        }
+
+        @keyframes footerFadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        .footer-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: #000;
+            color: #fff;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            z-index: 10000;
+            transform: translateX(400px);
+            transition: transform 0.4s ease;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: #28a745;
+        }
+
+        .notification.error {
+            background: #dc3545;
+        }
+
+        /* Loading Button State */
+        .continue-btn.loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .continue-btn.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 16px;
+            height: 16px;
+            margin: -8px 0 0 -8px;
+            border: 2px solid transparent;
+            border-top: 2px solid #fff;
+            border-radius: 50%;
+            animation: buttonSpin 1s linear infinite;
+        }
+
+        @keyframes buttonSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .role-selection-card {
+                padding: 40px 30px;
+                margin: 20px;
+            }
+
+            .main-logo {
+                font-size: 36px;
+            }
+
+            .role-options {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .role-option {
+                padding: 30px 20px;
+            }
+
+            .role-icon {
+                font-size: 36px;
+            }
+
+            .role-title {
+                font-size: 20px;
+            }
+
+            .continue-btn,
+            .back-btn {
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .role-selection-card {
+                padding: 30px 20px;
+            }
+
+            .main-logo {
+                font-size: 28px;
+            }
+
+            .subtitle {
+                font-size: 14px;
+            }
+
+            .description {
+                font-size: 12px;
+            }
+        }
+
+        /* Hover Effects */
+        .role-option {
+            position: relative;
+        }
+
+        .role-option::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .role-option:hover::after {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-logo">KAIRA</div>
+        <div class="loading-text">Choose Your Path</div>
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <div class="role-selection-card">
+            <!-- Header Section -->
+            <div class="header-section">
+                <h1 class="main-logo">KAIRA</h1>
+                <p class="subtitle">Fashion Management System</p>
+                <p class="description">
+                    Welcome to KAIRA's elegant fashion management platform. 
+                    Please select your role to access the appropriate interface 
+                    tailored to your needs and responsibilities.
+                </p>
+            </div>
+
+            <!-- Role Selection -->
+            <div class="role-options">
+                <!-- Admin Role -->
+                <div class="role-option" data-role="admin" onclick="selectRole('admin')">
+                    <span class="role-icon"></span>
+                    <h3 class="role-title">Administrator</h3>
+                    <p class="role-description">
+                        Full system access with comprehensive management capabilities. 
+                        Manage users, products, transactions, and content with advanced analytics and reporting tools.
+                    </p>
+                </div>
+
+                <!-- User Role -->
+                <div class="role-option" data-role="user" onclick="selectRole('user')">
+                    <span class="role-icon"></span>
+                    <h3 class="role-title">Customer</h3>
+                    <p class="role-description">
+                        Explore our curated fashion collection with personalized shopping experience. 
+                        Browse products, manage wishlist, and enjoy seamless checkout process.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Action Section -->
+            <div class="action-section">
+                <button class="continue-btn" id="continueBtn" onclick="proceedToRole()">
+                    Continue to Platform
+                </button>
+                <button class="back-btn" onclick="goBack()">
+                    Go Back
+                </button>
+            </div>
+
+            <!-- Footer -->
+            <div class="footer-section">
+                <p class="footer-text">
+                    © 2024 KAIRA Fashion Management System
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // Global variables
+        let selectedRole = null;
+        let isProcessing = false;
+
+        // Loading screen
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+            }, 2500);
+        });
+
+        // Role selection function
+        function selectRole(role) {
+            if (isProcessing) return;
+
+            // Remove previous selection
+            document.querySelectorAll('.role-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+
+            // Add selection to clicked option
+            const selectedOption = document.querySelector(`[data-role="${role}"]`);
+            selectedOption.classList.add('selected');
+
+            // Update global variable
+            selectedRole = role;
+
+            // Enable continue button
+            const continueBtn = document.getElementById('continueBtn');
+            continueBtn.classList.add('active');
+
+            // Show selection notification
+            showNotification(`${role === 'admin' ? 'Administrator' : 'Customer'} role selected`, 'success');
+
+            // Add subtle animation
+            selectedOption.style.transform = 'translateY(-5px) scale(1.02)';
+            setTimeout(() => {
+                selectedOption.style.transform = 'translateY(-5px)';
+            }, 200);
+        }
+
+        // Proceed to selected role
+        function proceedToRole() {
+            if (!selectedRole || isProcessing) {
+                showNotification('Please select a role first', 'error');
+                return;
+            }
+
+            isProcessing = true;
+            const continueBtn = document.getElementById('continueBtn');
+            continueBtn.classList.add('loading');
+
+            // Simulate processing time
+            setTimeout(() => {
+                if (selectedRole === 'admin') {
+                    showNotification('Redirecting to Admin Dashboard...', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                } else if (selectedRole === 'user') {
+                    showNotification('Redirecting to KAIRA Store...', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                }
+            }, 1000);
+        }
+
+        // Go back function
+        function goBack() {
+            if (isProcessing) return;
+            
+            showNotification('Redirecting to login...', 'success');
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 1000);
+        }
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (isProcessing) return;
+
+            switch(e.key) {
+                case '1':
+                    selectRole('admin');
+                    break;
+                case '2':
+                    selectRole('user');
+                    break;
+                case 'Enter':
+                    if (selectedRole) {
+                        proceedToRole();
+                    }
+                    break;
+                case 'Escape':
+                    goBack();
+                    break;
+            }
+        });
+
+        // Add hover sound effect (optional)
+        document.querySelectorAll('.role-option').forEach(option => {
+            option.addEventListener('mouseenter', function() {
+                if (!isProcessing) {
+                    this.style.transform = 'translateY(-3px)';
+                }
+            });
+
+            option.addEventListener('mouseleave', function() {
+                if (!this.classList.contains('selected') && !isProcessing) {
+                    this.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        // Prevent double-click issues
+        document.querySelectorAll('.role-option').forEach(option => {
+            option.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (!isProcessing) {
+                    const role = this.getAttribute('data-role');
+                    selectRole(role);
+                }
+            });
+        });
+
+        // Auto-focus for accessibility
+        setTimeout(() => {
+            document.querySelector('.role-option').focus();
+        }, 3000);
+
+        console.log('KAIRA Role Selection loaded successfully!');
+        console.log('Keyboard shortcuts:');
+        console.log('- Press 1: Select Administrator');
+        console.log('- Press 2: Select Customer');
+        console.log('- Press Enter: Continue to selected platform');
+        console.log('- Press Escape: Go back to login');
+    </script>
+</body>
+</html>

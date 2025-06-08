@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAIRA - Article Detail</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family:  'Helvetica Neue', Arial, sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-logo {
+            font-family: 'Times New Roman', serif;
+            font-size: 80px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #000;
+            margin-bottom: 30px;
+            animation: logoFadeIn 2s ease-in-out;
+        }
+
+        .loading-text {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 16px;
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #666;
+            margin-bottom: 40px;
+            animation: textSlideUp 2s ease-in-out 0.5s both;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #000;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes logoFadeIn {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes textSlideUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Main Content Animation */
+        .main-content {
+            opacity: 0;
+            animation: contentFadeIn 1s ease-in-out 3s both;
+        }
+
+        @keyframes contentFadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+       /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            animation: headerSlideDown 0.8s ease-out 3.2s both;
+        }
+
+        @keyframes headerSlideDown {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(0); }
+        }
+
+        .left-header {
+            display: flex;
+            align-items: center;
+        }
+
+        .hamburger {
+            cursor: pointer;
+            padding: 5px;
+            z-index: 110;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 22px;
+            height: 1px;
+            background: #000;
+            margin: 4px 0;
+            transition: 0.3s;
+        }
+
+        .logo {
+            font-family: 'Times New Roman', serif;
+            font-size: 60px;
+            font-weight: normal;
+            letter-spacing: 0.5px;
+            margin-left: 15px;
+            line-height: 0.9;
+            text-transform: uppercase;
+            color: #000;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #000;
+            text-transform: uppercase;
+            font-size: 14px;
+            font-weight: normal;
+            letter-spacing: 0.5px;
+            line-height: 1.4;
+        }
+
+        .search-box {
+            border-bottom: 1px solid #000;
+            padding-bottom: 2px;
+            margin-right: 15px;
+            width: 100px;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            font-size: 14px;
+            width: 100%;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            color: #000;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .search-box input::placeholder {
+            color: #000;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: normal;
+        }
+
+        .cart-icon, .wishlist-icon {
+            font-size: 18px;
+            margin-left: 5px;
+            position: relative;
+            cursor: pointer;
+            padding: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .cart-icon:hover, .wishlist-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .cart-count, .wishlist-count {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: #000;
+            color: #fff;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 600;
+            transform: scale(0);
+            transition: transform 0.3s ease;
+        }
+
+        .cart-count.show, .wishlist-count.show {
+            transform: scale(1);
+        }
+
+       /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            z-index: 200;
+            transition: left 0.3s ease;
+            padding: 80px 30px 30px;
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar ul li {
+            margin: 25px 0;
+        }
+
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #000;
+            font-size: 16px;
+            text-transform: uppercase;
+            font-weight: 500;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+            display: block;
+            padding: 10px 0;
+        }
+
+        .sidebar ul li a:hover {
+            color: #666;
+        }
+
+        .sidebar-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #000;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Overlay for sidebar */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 150;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+
+        /* Main Content */
+        .main-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        /* Article Detail */
+        .article-detail {
+            margin: 40px 0;
+        }
+
+        .article-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .article-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #000;
+            margin-bottom: 10px;
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 12px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .article-date, .article-author {
+            font-weight: 500;
+        }
+
+        .article-image-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .article-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .article-category {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .article-content {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.8;
+        }
+
+        .article-content p {
+            margin-bottom: 20px;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 10px 20px;
+            border: 1px solid #000;
+            background: transparent;
+            color: #000;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        /* Side Panels */
+        .side-panel {
+            position: fixed;
+            top: 0;
+            right: -350px;
+            width: 350px;
+            height: 100vh;
+            background: #fff;
+            box-shadow: -3px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: right 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .side-panel.active {
+            right: 0;
+        }
+
+        .panel-header {
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+        }
+
+        .panel-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #000;
+        }
+
+        .panel-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .panel-content {
+            padding: 20px;
+        }
+
+        .panel-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .panel-item-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .panel-item-info {
+            flex: 1;
+        }
+
+        .panel-item-name {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+            color: #000;
+        }
+
+        .panel-item-price {
+            font-size: 14px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 8px;
+        }
+
+        .panel-item-remove {
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .panel-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .panel-empty-icon {
+            font-size: 36px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .panel-empty-text {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #000;
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 10001;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                padding: 12px 24px;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .main-content {
+                padding: 0 20px;
+            }
+
+            .article-title {
+                font-size: 28px;
+            }
+
+            .article-image {
+                height: 300px;
+            }
+
+            .side-panel {
+                width: 100%;
+                right: -100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .article-title {
+                font-size: 24px;
+            }
+
+            .article-image {
+                height: 200px;
+            }
+
+            .article-content {
+                font-size: 14px;
+            }
+        }
+        /* Footer */
+        .footer {
+            background-color: #000;
+            color: #fff;
+            padding: 60px 20px 20px;
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(50px, 10vw, 80px);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 50px;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h4 {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #ccc;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-column ul li a {
+            color: #999;
+            text-decoration: none;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            transition: color 0.3s ease;
+            display: block;
+            padding: 2px 0;
+        }
+
+        .footer-column ul li a:hover {
+            color: #fff;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: flex-start;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: #fff;
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #333;
+            padding-top: 20px;
+            text-align: center;
+            font-size: 10px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-logo">KAIRA</div>
+        <div class="loading-text">Article Detail</div>
+        <div class="loading-spinner"></div>
+    </div>
+    <!-- Loading Animation -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+    <!-- Header -->
+    <header class="header">
+        <div class="left-header">
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="logo" onclick="goHome()">KAIRA</div>
+        </div>
+        <nav class="nav-links">
+            <div class="search-box">
+                <input type="text" placeholder="Search" id="searchInput">
+            </div>
+            <a href="#" onclick="showLogin()">Login</a>
+            <a href="#" onclick="showHelp()">Help</a>
+            <div class="wishlist-icon" onclick="toggleWishlist()">
+                <span style="font-size: 14px;">♡</span>
+                <div class="wishlist-count" id="wishlistCount">0</div>
+            </div>
+            <div class="cart-icon" onclick="toggleCart()">
+                <span style="font-size: 14px;">🛒</span>
+                <div class="cart-count" id="cartCount">0</div>
+            </div>
+        </nav>
+    </header>
+
+     <!-- Sidebar Menu -->
+    <nav class="sidebar" id="sidebar">
+        <button class="sidebar-close" onclick="toggleMenu()" aria-label="Close menu">×</button>
+        <ul>
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="match.html">STYLE RECOMENDATION</a></li>
+            <li><a href="produk.html">PRODUK</a></li>
+            <li><a href="artikel.html">ARTICLE</a></li>
+            <li><a href="about.html">ABOUT KAIRA</a></li>
+            <li><a href="contact.html">CONTACT</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="article-detail" id="articleDetail">
+            <a href="artikel.html" class="back-button">Back to Articles</a>
+            <div class="article-header">
+                <h1 class="article-title" id="articleTitle"></h1>
+                <div class="article-meta">
+                    <span class="article-date" id="articleDate"></span>
+                    <span class="article-author" id="articleAuthor"></span>
+                </div>
+            </div>
+            <div class="article-image-container">
+                <img src="img/new/artikel.jpg" alt="" class="article-image" id="articleImage">
+                <div class="article-category" id="articleCategory"></div>
+            </div>
+            <div class="article-content" id="articleContent"></div>
+        </div>
+    </div>
+
+    <!-- Cart Panel -->
+    <div class="side-panel" id="cartPanel">
+        <div class="panel-header">
+            <h2 class="panel-title">Shopping Cart</h2>
+            <button class="panel-close" onclick="toggleCart()">×</button>
+        </div>
+        <div class="panel-content" id="cartContent">
+            <div class="panel-empty">
+                <div class="panel-empty-icon">🛒</div>
+                <div class="panel-empty-text">Your cart is empty</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wishlist Panel -->
+    <div class="side-panel" id="wishlistPanel">
+        <div class="panel-header">
+            <h2 class="panel-title">Wishlist</h2>
+            <button class="panel-close" onclick="toggleWishlist()">×</button>
+        </div>
+        <div class="panel-content" id="wishlistContent">
+            <div class="panel-empty">
+                <div class="panel-empty-icon">♡</div>
+                <div class="panel-empty-text">Your wishlist is empty</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+        <!-- Footer -->
+<footer class="footer" id="contact">
+    <div class="footer-container">
+        <div class="footer-logo">KAIRA</div>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h4>CUSTOMER SERVICE</h4>
+                <ul>
+                    <li><a href="#" onclick="showContact()">CONTACT US</a></li>
+                    <li><a href="#" onclick="showStoreLocator()">STORE LOCATOR</a></li>
+                    <li><a href="#" onclick="showShipping()">SHIPPING INFO</a></li>
+                    <li><a href="#" onclick="showReturns()">RETURN POLICY</a></li>
+                    <li><a href="#" onclick="showSizeGuide()">SIZE GUIDE</a></li>
+                    <li><a href="#" onclick="showFAQ()">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>COMPANY</h4>
+                <ul>
+                    <li><a href="#about">ABOUT US</a></li>
+                    <li><a href="#" onclick="showCareers()">CAREERS</a></li>
+                    <li><a href="#" onclick="showPress()">PRESS</a></li>
+                    <li><a href="#" onclick="showInvestors()">INVESTORS</a></li>
+                    <li><a href="#" onclick="showSustainability()">SUSTAINABILITY</a></li>
+                    <li><a href="#" onclick="showPartnership()">PARTNERSHIPS</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>COLLECTIONS</h4>
+                <ul>
+                    <li><a href="#products">NEW ARRIVALS</a></li>
+                    <li><a href="#" onclick="showWomen()">WOMEN</a></li>
+                    <li><a href="#" onclick="showMen()">MEN</a></li>
+                    <li><a href="#" onclick="showAccessories()">ACCESSORIES</a></li>
+                    <li><a href="#" onclick="showSale()">SALE</a></li>
+                    <li><a href="#" onclick="showGiftCard()">GIFT CARDS</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>FOLLOW US</h4>
+                <ul>
+                    <li><a href="#" onclick="openSocial('instagram')">INSTAGRAM</a></li>
+                    <li><a href="#" onclick="openSocial('facebook')">FACEBOOK</a></li>
+                    <li><a href="#" onclick="openSocial('twitter')">TWITTER</a></li>
+                    <li><a href="#" onclick="openSocial('pinterest')">PINTEREST</a></li>
+                    <li><a href="#" onclick="openSocial('youtube')">YOUTUBE</a></li>
+                    <li><a href="#" onclick="openSocial('tiktok')">TIKTOK</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>LEGAL</h4>
+                <ul>
+                    <li><a href="#" onclick="showPrivacy()">PRIVACY POLICY</a></li>
+                    <li><a href="#" onclick="showTerms()">TERMS & CONDITIONS</a></li>
+                    <li><a href="#" onclick="showCookies()">COOKIE POLICY</a></li>
+                    <li><a href="#" onclick="showAccessibility()">ACCESSIBILITY</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 KAIRA. ALL RIGHTS RESERVED. | DESIGNED IN INDONESIA</p>
+        </div>
+    </div>
+</footer>
+
+
+    <script>
+        // Global variables
+        let cart = [];
+        let wishlist = [];
+
+        // Sample articles data (same as articles page)
+        const sampleArticles = [
+              {
+                id: 1, 
+                title: 'FEMININE EMBRACING THE DARK SIDE OF ELEGANCE',
+                excerpt: 'Discover the hottest fashion trends for spring 2024. From vibrant colors to minimalist designs, explore what\'s trending this season.',
+                category: 'fashion',
+                image: 'img/new/artikel3.jpg',
+                author: 'LINA GARCIA-FERRADO',
+                date: '2024-03-15',
+                content: `
+                <h1>The Allure of Feminine Dark Green Style</h1>
+                <p>Dark green has quietly emerged as the new black for women who want to embrace elegance with a mysterious, sophisticated edge. This rich, earthy hue carries a sense of calm and confidence, making it an ideal choice for both everyday wear and special occasions. Unlike harsher or more common colors, dark green feels timeless yet fresh — it’s a statement color that balances boldness with subtlety.</p>
+                <p>Pairing dark green with flowing, delicate fabrics like satin, chiffon, or silk enhances its feminine appeal while maintaining an air of boldness. Think midi dresses with puff sleeves that softly catch the light or silk blouses neatly tucked into high-waisted trousers, offering a refined yet approachable silhouette. Wrap skirts in deep green shades provide versatility, easily transitioning from daytime casual to evening elegance. These styles not only flatter the figure but also invite a graceful, effortless vibe.</p>
+                <p>To elevate the look further, gold accessories are the perfect complement to dark green’s warmth. Whether it’s delicate layered necklaces, chunky bracelets, or statement earrings, gold tones add a touch of luxury and brightness. Footwear in muted nude shades — from classic pumps to chic ankle boots — help ground the outfit without overpowering it. Adding a handbag in a matching deep green or a contrasting warm brown leather completes the ensemble with a polished finish.</p>
+                <p>When the temperatures drop, layering becomes essential, and here, dark green shines as well. A tailored coat in dark green wool or a velvet blazer provides warmth and sophistication without sacrificing femininity. These outerwear pieces can effortlessly transform the mood of the outfit, adding texture and depth that invite tactile interest. Soft scarves or gloves in complementary shades like cream or rust can round out the look, creating a cohesive and stylish appearance.</p>
+                <p>Feminine dark green fashion strikes a unique balance between strength and softness, mystery and approachability. Whether you’re headed to a romantic dinner date, a professional meeting, or simply enjoying a stroll through the city, choosing dark green speaks volumes about your style sensibility. It’s a color that invites admiration, effortlessly blending classic elegance with contemporary chic. This season, let dark green be your go-to shade to express your confident yet tender side in the most fashionable way possible.</p>
+
+                                `
+            },
+            {
+                id: 2,
+                title: 'ICONIC RED-CARPET LOOKS STAR',
+                excerpt: 'Learn how to achieve a natural, effortless look with minimal makeup. Perfect for everyday wear and busy lifestyles.',
+                category: 'beauty',
+                image: 'img/new/tas5.jpg',
+                author: ' MARGOT ROBBIE',
+                date: '2024-03-12',
+                content: `
+                <h1>Red-Carpet Beauty Secrets Revealed</h1>
+                <p>Red-carpet looks go far beyond just glamorous gowns — they’re about flawless makeup, impeccable styling, and the confidence to own every moment. To recreate that star-studded glow that captivates cameras and dazzles crowds, start with the foundation: a luminous, hydrated base. Use a hydrating primer to prep the skin, followed by a radiant foundation that evens out your complexion while adding a subtle glow from within. The key is to keep the skin looking fresh and natural under intense lighting.</p>
+                <p>Next, highlight the high points of your face — cheekbones, nose bridge, and cupid’s bow — to mimic the perfect glow that celebrities achieve on the red carpet. A liquid or cream highlighter works best for a dewy finish that catches the light beautifully.</p>
+                <p>Bold eyeliner is essential for defining the eyes and adding drama. Whether you prefer a sharp wing or a smoky effect, make sure to use long-lasting, waterproof formulas to avoid smudging during the event. Pair this with voluminous, fluttery lashes — false lashes or high-quality mascara — to open up the eyes and create that captivating stare.</p>
+                <p>When it comes to lips, the classic red lip remains an undeniable staple. Opt for a richly pigmented, long-wearing red lipstick that complements your skin tone. Matte or satin finishes both work well, but make sure to line your lips first to prevent feathering and to give your pout a polished shape.</p>
+                <p>To lock in the entire look, use a setting spray designed to withstand heat, humidity, and the relentless flash of cameras. This ensures your makeup stays fresh and intact from the moment you step onto the carpet until you leave.</p>
+                <p>Hairstyling is the final touch: sleek, polished hair creates a sophisticated vibe, while soft waves add romantic movement and texture. Choose what suits your outfit and personal style best — either way, hair should look healthy, shiny, and effortlessly elegant.</p>
+                <p>Ultimately, confidence is the most important beauty secret. Wear your look like a true icon, stand tall, and let your inner star shine through. The red carpet isn’t just about appearances — it’s about embodying glamour, poise, and self-assurance with every step.</p>
+
+                `
+            },
+            {
+                id: 3,
+                title: 'DANIELLE LUXEMBOURG IN BERLIN',
+                excerpt: 'Make conscious fashion choices that benefit both you and the environment. A guide to sustainable shopping.',
+                category: 'lifestyle',
+                image: 'img/new/artikel.jpg',
+                author: 'SUSTAINABLE FASHION',
+                date: '2024-03-10',
+                content: `
+                <h1>Danielle Luxembourg’s Sustainable Style in Berlin</h1>
+                <p>While exploring the vibrant and diverse city of Berlin, Danielle Luxembourg has become a shining example of how fashion can be both chic and environmentally conscious. Danielle is widely recognized for her strong commitment to eco-friendly and sustainable brands, and she skillfully blends urban street style with mindful choices that support the planet. From carefully selected thrifted jackets that carry stories of the past to innovative biodegradable fabrics, her wardrobe tells a tale of responsible fashion.</p>
+                <p>Danielle’s style philosophy revolves around favoring earthy, natural tones and timeless silhouettes that reflect her core values. She believes that clothing should do more than just look good — each piece should embody a meaningful story and contribute to a greener future. Her wardrobe in Berlin includes essentials such as organic cotton jeans, known for their minimal environmental impact, alongside vintage leather boots that add a unique edge without harming the planet. Beyond clothing, Danielle incorporates handmade accessories crafted by local artisans, supporting small businesses and preserving traditional crafts.</p>
+                <p>Living in Berlin, a city celebrated for its dynamic culture and progressive mindset, Danielle’s fashion choices resonate with the spirit of sustainability that permeates the city. She combines practicality with elegance, opting for versatile pieces that can be mixed and matched for various occasions, reducing the need for fast fashion consumption. By choosing quality over quantity, she promotes longevity in her wardrobe, proving that sustainable fashion is not only ethical but also stylish.</p>
+                <p>Danielle’s approach sends a powerful message that conscious fashion can thrive in an urban environment, inspiring others to rethink their shopping habits and embrace eco-friendly alternatives. Through her distinct style, she reflects Berlin’s vibrant culture while championing a greener, more sustainable future — demonstrating beautifully that sustainability will always remain in fashion.</p>
+
+                `
+            },
+            {
+                id: 4,
+                title: 'EVERYTHING YOU NEED TO KNOW',
+                excerpt: 'Explore the vibrant color palette that will dominate summer fashion. From coral to sage green, find your perfect shade.',
+                category: 'trends',
+                image: 'img/new/artikel2.jpg',
+                author: 'CHIRSTYA',
+                date: '2024-03-08',
+                content: `
+                <h1>Everything You Need to Know About Summer Color Trends</h1>
+                <p>This summer, your wardrobe gets a vibrant color upgrade. From coral to sage green, these fresh and lively hues are dominating the season’s fashion scene. Coral brings an energetic warmth that instantly brightens any outfit, making it perfect for beachwear, casual tops, or statement dresses. On the other hand, sage green offers a more grounded, elegant aesthetic that pairs beautifully with neutral tones and natural fabrics.</p>
+                <p>Electric blues and sunny yellows are also making a strong comeback, adding dynamic contrasts that make any outfit pop. These colors evoke feelings of joy and vitality, reflecting the carefree spirit of summer. The best part is that these hues work perfectly with breathable, lightweight fabrics like cotton, linen, and bamboo — ideal choices for keeping cool during the heat of the season.</p>
+                <p>Accessories are an easy way to experiment with summer’s color palette. Bright handbags, chunky jewelry, or colorful sandals can add just the right amount of flair to a simple outfit. If you’re feeling bolder, color-blocking is a fun trend that lets you combine multiple vibrant shades in one look — think coral tops with electric blue skirts or sunny yellow blouses with sage green pants.</p>
+                <p>For those who prefer subtlety, pastel versions of these colors are also trending, offering a softer, more delicate approach to summer hues. Pastel coral and muted sage bring a sophisticated touch to your everyday wardrobe without overpowering your look.</p>
+                <p>Don’t forget about prints — florals, tropical leaves, and abstract patterns in these trendy colors add movement and personality to your summer ensembles. Pair printed skirts or dresses with solid tops in complementary shades for a balanced and stylish outfit.</p>
+                <p>Whether you’re dressing for a casual day out, a summer party, or a beach vacation, there’s a summer color trend for everyone. Embrace the season by expressing yourself through your palette and experiment with combinations that make you feel confident and radiant.</p>
+                <p>Remember, fashion is all about having fun and showcasing your unique style. So go ahead, dive into these vibrant summer colors and let your wardrobe shine!</p>
+
+                `
+            },
+            {
+                id: 5,
+                title: 'TRENS RETRO',
+                excerpt: 'Create a versatile wardrobe with essential pieces that mix and match effortlessly. Quality over quantity approach.',
+                category: 'fashion',
+                image: 'img/new/11.jpg',
+                author: 'EMILY RATAJKOWSKI',
+                date: '2024-03-05',
+                content: `
+               <h1>The Return of Retro: Fashion’s Nostalgic Comeback</h1>
+                <p>Retro trends are making a fierce comeback, bringing the charm of past decades into modern wardrobes. From flared jeans and oversized sunglasses to colorful prints and vintage sneakers, the styles of the 70s through the 90s are back in vogue. These iconic pieces not only offer a nostalgic appeal but also provide versatility that complements today’s fashion sensibilities.</p>
+                <p>Mixing and matching old-school staples with contemporary items is the key to achieving a balanced and stylish look. For instance, layering a vintage leather jacket over a sleek modern midi dress creates a perfect contrast between edgy and elegant. Pairing wide-leg pants with a cropped top or graphic tee channels that retro vibe while keeping the outfit fresh and current. Accessories such as chunky gold jewelry, headbands, and statement belts add the finishing touches that truly bring out the retro spirit.</p>
+                <p>Fashion cycles prove that what once was old eventually becomes new again, reminding us that style is ever-evolving. This resurgence encourages creativity, allowing fashion lovers to personalize their looks with a blend of past and present influences. Whether you prefer the bold prints of the 70s disco era or the grunge-inspired looks of the 90s, retro fashion offers endless opportunities to express individuality.</p>
+                <p>Don’t hesitate to dig into your closet—or even your parents’—for those hidden gems that can transform your wardrobe. Vintage shops and thrift stores have become treasure troves for unique retro finds that add character and authenticity to your style. Embracing retro fashion is more than a trend; it’s a celebration of timelessness, creativity, and the joy of revisiting iconic looks from decades past.</p>
+                <p>So, step out with confidence and let the nostalgia of retro fashion inspire your everyday outfits. This comeback is here to stay, proving that great style never really goes out of fashion—it just comes around again.</p>
+
+
+                `
+            },
+            {
+                id: 6,
+                title: 'TREND JEWELRY',
+                excerpt: 'Establish a simple yet effective skincare routine. Learn about the must-have products for healthy, glowing skin.',
+                category: 'fashion',
+                image: 'img/new/cicin.jpg',
+                author: 'LARA SANCHEZ-PORTILLO<',
+                date: '2024-03-03',
+                content: `
+               <h1>Jewelry Trends That Are Shaping 2024</h1>
+                <p>This year’s jewelry trends are all about celebrating individuality and making bold, unforgettable statements. Oversized earrings that command attention, chunky rings that add personality, and layered necklaces that create depth are stealing the spotlight in fashion circles everywhere. The key to standing out this year is to look for pieces that blend different materials in unexpected ways — think delicate pearls paired with rugged metal, or colorful resin combined with sparkling gemstones — crafting a fresh, eclectic vibe that feels uniquely you.</p>
+                <p>While gold jewelry remains timeless and beloved, silver is making a strong comeback, alongside colored enamel accents that add playful pops of color. This mix of classic and contemporary materials allows for versatile styling that can easily transition from day to night. Personalized jewelry is also having its moment in 2024; nameplates, zodiac charms, and birthstone pieces are more popular than ever, allowing wearers to carry meaningful symbols and stories close to their hearts.</p>
+                <p>The spectrum of styles this year is broad, catering to both minimalist enthusiasts who prefer clean lines and subtle elegance, and maximalists who love to pile on layers and textures for dramatic effect. Whether you favor delicate chains or bold, chunky pieces, the focus is on self-expression and creativity. Jewelry in 2024 isn’t just an accessory — it’s a statement of who you are.</p>
+                <p>From delicate ear cuffs and mismatched earrings to statement cuffs and cocktail rings, the choices are abundant and exciting. Mixing metals and textures is encouraged, breaking old rules and redefining what jewelry can be. Sustainability is also influencing design choices, with many brands offering ethically sourced gems and recycled metals, allowing fashion lovers to accessorize with a conscience.</p>
+                <p>Ultimately, 2024’s jewelry trends empower you to curate your own unique collection that tells your story, sparks conversation, and elevates every outfit with confidence and flair. Whether dressing for casual days or special occasions, your jewelry is the perfect canvas for creativity and personal style.</p>
+
+                `
+            },
+        ];
+
+        // Loading screen
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+                initializeArticle();
+                loadCartAndWishlist();
+            }, 2000);
+        });
+
+        // Initialize article
+        function initializeArticle() {
+            const articleId = localStorage.getItem('currentArticleId');
+            const article = sampleArticles.find(a => a.id === parseInt(articleId));
+            
+            if (article) {
+                document.getElementById('articleTitle').textContent = article.title;
+                document.getElementById('articleDate').textContent = formatDate(article.date);
+                document.getElementById('articleAuthor').textContent = `By ${article.author}`;
+                document.getElementById('articleImage').src = article.image;
+                document.getElementById('articleImage').alt = article.title;
+                document.getElementById('articleCategory').textContent = article.category;
+                document.getElementById('articleContent').innerHTML = article.content;
+            } else {
+                document.getElementById('articleDetail').innerHTML = `
+                    <div style="text-align: center; padding: 40px 0; color: #666;">
+                        <div style="font-size: 16px; text-transform: uppercase; letter-spacing: 1px;">
+                            Article not found
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+
+        // Cart and wishlist functions (same as articles page)
+        function updateCartCount() {
+            const countElement = document.getElementById('cartCount');
+            countElement.textContent = cart.length;
+            countElement.classList.toggle('show', cart.length > 0);
+        }
+
+        function updateWishlistCount() {
+            const countElement = document.getElementById('wishlistCount');
+            countElement.textContent = wishlist.length;
+            countElement.classList.toggle('show', wishlist.length > 0);
+        }
+
+        function renderCart() {
+            const cartContent = document.getElementById('cartContent');
+            
+            if (cart.length === 0) {
+                cartContent.innerHTML = `
+                    <div class="panel-empty">
+                        <div class="panel-empty-icon">🛒</div>
+                        <div class="panel-empty-text">Your cart is empty</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            let cartHTML = '';
+            let total = 0;
+            
+            cart.forEach(item => {
+                total += item.price;
+                cartHTML += `
+                    <div class="panel-item">
+                        <img src="${item.image}" alt="${item.name}" class="panel-item-image">
+                        <div class="panel-item-info">
+                            <div class="panel-item-name">${item.name}</div>
+                            <div class="panel-item-price">Rp ${item.price.toLocaleString()}</div>
+                            <button class="panel-item-remove" onclick="removeFromCart(${item.id})">Remove</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            cartHTML += `
+                <div style="padding: 15px; border-top: 1px solid #f0f0f0; margin-top: 15px; text-align: center;">
+                    <div style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">
+                        Total: Rp ${total.toLocaleString()}
+                    </div>
+                    <button style="width: 100%; padding: 12px; background: #000; color: #fff; border: none; border-radius: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer;" onclick="checkout()">
+                        Checkout
+                    </button>
+                </div>
+            `;
+            
+            cartContent.innerHTML = cartHTML;
+        }
+
+        function renderWishlist() {
+            const wishlistContent = document.getElementById('wishlistContent');
+            
+            if (wishlist.length === 0) {
+                wishlistContent.innerHTML = `
+                    <div class="panel-empty">
+                        <div class="panel-empty-icon">♡</div>
+                        <div class="panel-empty-text">Your wishlist is empty</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            let wishlistHTML = '';
+            
+            wishlist.forEach(item => {
+                wishlistHTML += `
+                    <div class="panel-item">
+                        <img src="${item.image}" alt="${item.name}" class="panel-item-image">
+                        <div class="panel-item-info">
+                            <div class="panel-item-name">${item.name}</div>
+                            <div class="panel-item-price">Rp ${item.price.toLocaleString()}</div>
+                            <button class="panel-item-remove" onclick="removeFromWishlist(${item.id})">Remove</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            wishlistContent.innerHTML = wishlistHTML;
+        }
+
+        function removeFromCart(itemId) {
+            const itemIndex = cart.findIndex(item => item.id === itemId);
+            if (itemIndex > -1) {
+                const item = cart[itemIndex];
+                cart.splice(itemIndex, 1);
+                updateCartCount();
+                renderCart();
+                saveCartAndWishlist();
+                showNotification(`${item.name} removed from cart!`);
+            }
+        }
+
+        function removeFromWishlist(itemId) {
+            const itemIndex = wishlist.findIndex(item => item.id === itemId);
+            if (itemIndex > -1) {
+                const item = wishlist[itemIndex];
+                wishlist.splice(itemIndex, 1);
+                updateWishlistCount();
+                renderWishlist();
+                saveCartAndWishlist();
+                showNotification(`${item.name} removed from wishlist!`);
+            }
+        }
+
+        function toggleCart() {
+            const cartPanel = document.getElementById('cartPanel');
+            const wishlistPanel = document.getElementById('wishlistPanel');
+            
+            wishlistPanel.classList.remove('active');
+            cartPanel.classList.toggle('active');
+            renderCart();
+        }
+
+        function toggleWishlist() {
+            const wishlistPanel = document.getElementById('wishlistPanel');
+            const cartPanel = document.getElementById('cartPanel');
+            
+            cartPanel.classList.remove('active');
+            wishlistPanel.classList.toggle('active');
+            renderWishlist();
+        }
+
+        function toggleMenu() {
+            const hamburger = document.querySelector('.hamburger');
+            const sidebar = document.getElementById('sidebar');
+
+            hamburger.classList.toggle('active');
+            sidebar.classList.toggle('active');
+
+            const spans = hamburger.querySelectorAll('span');
+            if (hamburger.classList.contains('active')) {
+                spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                spans[1].style.opacity = '0';
+                spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+            } else {
+                spans[0].style.transform = 'none';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = 'none';
+            }
+        }
+
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2500);
+        }
+
+        function saveCartAndWishlist() {
+            localStorage.setItem('kaira_cart', JSON.stringify(cart));
+            localStorage.setItem('kaira_wishlist', JSON.stringify(wishlist));
+        }
+
+        function loadCartAndWishlist() {
+            const savedCart = localStorage.getItem('kaira_cart');
+            const savedWishlist = localStorage.getItem('kaira_wishlist');
+            
+            if (savedCart) {
+                cart = JSON.parse(savedCart);
+                updateCartCount();
+            }
+            
+            if (savedWishlist) {
+                wishlist = JSON.parse(savedWishlist);
+                updateWishlistCount();
+            }
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                showNotification('Your cart is empty!');
+                return;
+            }
+            
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            showNotification(`Checkout successful! Total: Rp ${total.toLocaleString()}`);
+            
+            cart = [];
+            updateCartCount();
+            renderCart();
+            saveCartAndWishlist();
+            
+            document.getElementById('cartPanel').classList.remove('active');
+        }
+
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+
+        function showLogin() {
+            window.location.href = 'login.html';
+        }
+
+        function showHelp() {
+            showNotification('Contact customer service at help@kaira.com');
+        }
+
+        // Close panels when clicking outside
+        document.addEventListener('click', function(e) {
+            const cartPanel = document.getElementById('cartPanel');
+            const wishlistPanel = document.getElementById('wishlistPanel');
+            const cartIcon = document.querySelector('.cart-icon');
+            const wishlistIcon = document.querySelector('.wishlist-icon');
+            const sidebar = document.getElementById('sidebar');
+            const hamburger = document.querySelector('.hamburger');
+            
+            if (!cartPanel.contains(e.target) && !cartIcon.contains(e.target)) {
+                cartPanel.classList.remove('active');
+            }
+            
+            if (!wishlistPanel.contains(e.target) && !wishlistIcon.contains(e.target)) {
+                wishlistPanel.classList.remove('active');
+            }
+            
+            if (!sidebar.contains(e.target) && !hamburger.contains(e.target) && sidebar.classList.contains('active')) {
+                toggleMenu();
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.getElementById('cartPanel').classList.remove('active');
+                document.getElementById('wishlistPanel').classList.remove('active');
+                if (document.getElementById('sidebar').classList.contains('active')) {
+                    toggleMenu();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

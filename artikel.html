@@ -1,0 +1,1650 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAIRA - Articles</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family:  'Helvetica Neue', Arial, sans-serif;;
+            background-color: #ffffff;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-logo {
+            font-family: 'Times New Roman', serif;
+            font-size: 80px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #000;
+            margin-bottom: 30px;
+            animation: logoFadeIn 2s ease-in-out;
+        }
+
+        .loading-text {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            font-size: 16px;
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #666;
+            margin-bottom: 40px;
+            animation: textSlideUp 2s ease-in-out 0.5s both;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #000;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes logoFadeIn {
+            0% { opacity: 0; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes textSlideUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Main Content Animation */
+        .main-content {
+            opacity: 0;
+            animation: contentFadeIn 1s cubic-bezier(0.215, 0.61, 0.355, 1) 3s both;
+        }
+
+        @keyframes contentFadeIn {
+            0% { opacity: 0; transform: translateY(15px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Article-specific animations */
+        @keyframes articleHover {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-8px) scale(1.02); }
+        }
+
+        @keyframes imageZoom {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+
+        @keyframes categorySlide {
+            0% { transform: translateX(-10px); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes smoothGlow {
+            0% { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
+            100% { box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); }
+        }
+
+       /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            animation: headerSlideDown 0.8s cubic-bezier(0.215, 0.61, 0.355, 1) 3.2s both;
+        }
+
+        @keyframes headerSlideDown {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(0); }
+        }
+
+        .left-header {
+            display: flex;
+            align-items: center;
+        }
+
+        .hamburger {
+            cursor: pointer;
+            padding: 5px;
+            z-index: 110;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 22px;
+            height: 1px;
+            background: #000;
+            margin: 4px 0;
+            transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .logo {
+            font-family: 'Times New Roman', serif;
+            font-size: 60px;
+            font-weight: normal;
+            letter-spacing: 0.5px;
+            margin-left: 15px;
+            line-height: 0.9;
+            text-transform: uppercase;
+            color: #000;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #000;
+            text-transform: uppercase;
+            font-size: 14px;
+            font-weight: normal;
+            letter-spacing: 0.5px;
+            line-height: 1.4;
+        }
+
+        .search-box {
+            border-bottom: 1px solid #000;
+            padding-bottom: 2px;
+            margin-right: 15px;
+            width: 100px;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            font-size: 14px;
+            width: 100%;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            color: #000;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .search-box input::placeholder {
+            color: #000;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: normal;
+        }
+
+        .cart-icon, .wishlist-icon {
+            font-size: 18px;
+            margin-left: 5px;
+            position: relative;
+            cursor: pointer;
+            padding: 8px;
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .cart-icon:hover, .wishlist-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .cart-count, .wishlist-count {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: #000;
+            color: #fff;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 600;
+            transform: scale(0);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .cart-count.show, .wishlist-count.show {
+            transform: scale(1);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            z-index: 200;
+            transition: left 0.3s ease;
+            padding: 80px 30px 30px;
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar ul li {
+            margin: 25px 0;
+        }
+
+        .sidebar ul li a {
+            text-decoration: none;
+            color: #000;
+            font-size: 16px;
+            text-transform: uppercase;
+            font-weight: 500;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+            display: block;
+            padding: 10px 0;
+        }
+
+        .sidebar ul li a:hover {
+            color: #666;
+        }
+
+        .sidebar-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #000;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Overlay for sidebar */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 150;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin: 40px 0 30px;
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #000;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 300;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            border: 1px solid #000;
+            background: transparent;
+            color: #000;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            border-radius: 4px;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: #000;
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Articles Grid */
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        /* Article Card */
+        .article-card {
+            background: #fff;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: pointer;
+            position: relative;
+            will-change: transform, box-shadow;
+        }
+
+        .article-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .article-image-container {
+            position: relative;
+            overflow: hidden;
+            height: 200px;
+        }
+
+        .article-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: transform;
+        }
+
+        .article-card:hover .article-image {
+            transform: scale(1.05);
+        }
+
+        .article-category {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .article-card:hover .article-category {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Article Info */
+        .article-info {
+            padding: 20px;
+        }
+
+        .article-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 8px;
+            line-height: 1.3;
+            transition: color 0.3s ease;
+        }
+
+        .article-card:hover .article-title {
+            color: #333;
+        }
+
+        .article-excerpt {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 12px;
+            transition: color 0.3s ease;
+        }
+
+        .article-card:hover .article-excerpt {
+            color: #555;
+        }
+
+        .article-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 10px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+        .article-card:hover .article-meta {
+            color: #777;
+        }
+
+        .article-date {
+            font-weight: 500;
+        }
+
+        .article-author {
+            font-weight: 500;
+        }
+
+        /* Side Panels */
+        .side-panel {
+            position: fixed;
+            top: 0;
+            right: -350px;
+            width: 350px;
+            height: 100vh;
+            background: #fff;
+            box-shadow: -3px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: right 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+            overflow-y: auto;
+        }
+
+        .side-panel.active {
+            right: 0;
+        }
+
+        .panel-header {
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+        }
+
+        .panel-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #000;
+        }
+
+        .panel-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #666;
+            transition: transform 0.3s ease;
+        }
+
+        .panel-close:hover {
+            transform: rotate(90deg);
+        }
+
+        .panel-content {
+            padding: 20px;
+        }
+
+        .panel-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f5f5f5;
+            transition: transform 0.3s ease;
+        }
+
+        .panel-item:hover {
+            transform: translateX(5px);
+        }
+
+        .panel-item-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .panel-item-info {
+            flex: 1;
+        }
+
+        .panel-item-name {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+            color: #000;
+        }
+
+        .panel-item-price {
+            font-size: 14px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 8px;
+        }
+
+        .panel-item-remove {
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: opacity 0.3s ease;
+        }
+
+        .panel-item-remove:hover {
+            opacity: 0.7;
+        }
+
+        .panel-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .panel-empty-icon {
+            font-size: 36px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .panel-empty-text {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #000;
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 10001;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        /* Fade in animation for articles */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                        transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Article click animation */
+        .article-clicked::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            opacity: 0;
+            z-index: 1;
+            animation: rippleEffect 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            pointer-events: none;
+        }
+
+        @keyframes rippleEffect {
+            0% { opacity: 0.5; transform: scale(0.8); }
+            100% { opacity: 0; transform: scale(1.05); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .articles-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 12px 20px;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .main-content {
+                padding: 0 20px;
+            }
+
+            .page-title {
+                font-size: 28px;
+            }
+
+            .articles-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .side-panel {
+                width: 100%;
+                right: -100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title {
+                font-size: 24px;
+            }
+
+            .filter-section {
+                gap: 8px;
+            }
+
+            .filter-btn {
+                padding: 8px 14px;
+                font-size: 10px;
+            }
+
+            .article-image-container {
+                height: 180px;
+            }
+        }
+        /* Footer */
+        .footer {
+            background-color: #000;
+            color: #fff;
+            padding: 60px 20px 20px;
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(50px, 10vw, 80px);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 50px;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h4 {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #ccc;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-column ul li a {
+            color: #999;
+            text-decoration: none;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            transition: color 0.3s ease;
+            display: block;
+            padding: 2px 0;
+        }
+
+        .footer-column ul li a:hover {
+            color: #fff;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: flex-start;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: #333;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: #fff;
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #333;
+            padding-top: 20px;
+            text-align: center;
+            font-size: 10px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-logo">KAIRA</div>
+        <div class="loading-text">Articles</div>
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="left-header">
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="logo" onclick="goHome()">KAIRA</div>
+        </div>
+        <nav class="nav-links">
+            <div class="search-box">
+                <input type="text" placeholder="Search" id="searchInput">
+            </div>
+            <a href="#" onclick="showLogin()"></a>
+            <a href="#" onclick="showHelp()"></a>
+            
+            <div class="wishlist-icon" onclick="toggleWishlist()">
+                <span style="font-size: 14px;">♡</span>
+                <div class="wishlist-count" id="wishlistCount">0</div>
+            </div>
+            
+            <div class="cart-icon" onclick="toggleCart()">
+                <span style="font-size: 14px;">🛒</span>
+                <div class="cart-count" id="cartCount">0</div>
+            </div>
+        </nav>
+    </header>
+
+     <!-- Sidebar Menu -->
+    <nav class="sidebar" id="sidebar">
+        <button class="sidebar-close" onclick="toggleMenu()" aria-label="Close menu">×</button>
+        <ul>
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="match.html">STYLE RECOMENDATION</a></li>
+            <li><a href="produk.html">PRODUK</a></li>
+            <li><a href="artikel.html">ARTICLE</a></li>
+            <li><a href="about.html">ABOUT KAIRA</a></li>
+            <li><a href="contact.html">CONTACT</a></li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Fashion Articles</h1>
+            <p class="page-subtitle">Discover the latest trends, tips & lifestyle insights</p>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <button class="filter-btn active" data-filter="all">All Articles</button>
+            <button class="filter-btn" data-filter="fashion">Fashion</button>
+            <button class="filter-btn" data-filter="beauty">Beauty</button>
+            <button class="filter-btn" data-filter="lifestyle">Lifestyle</button>
+            <button class="filter-btn" data-filter="trends">Trends</button>
+        </div>
+
+        <!-- Articles Grid -->
+        <div class="articles-grid" id="articlesGrid">
+            <!-- Articles will be populated here -->
+        </div>
+    </div>
+
+    <!-- Cart Panel -->
+    <div class="side-panel" id="cartPanel">
+        <div class="panel-header">
+            <h2 class="panel-title">Shopping Cart</h2>
+            <button class="panel-close" onclick="toggleCart()">×</button>
+        </div>
+        <div class="panel-content" id="cartContent">
+            <div class="panel-empty">
+                <div class="panel-empty-icon">🛒</div>
+                <div class="panel-empty-text">Your cart is empty</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wishlist Panel -->
+    <div class="side-panel" id="wishlistPanel">
+        <div class="panel-header">
+            <h2 class="panel-title">Wishlist</h2>
+            <button class="panel-close" onclick="toggleWishlist()">×</button>
+        </div>
+        <div class="panel-content" id="wishlistContent">
+            <div class="panel-empty">
+                <div class="panel-empty-icon">♡</div>
+                <div class="panel-empty-text">Your wishlist is empty</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+    <!-- Footer -->
+<footer class="footer" id="contact">
+    <div class="footer-container">
+        <div class="footer-logo">KAIRA</div>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h4>CUSTOMER SERVICE</h4>
+                <ul>
+                    <li><a href="#" onclick="showContact()">CONTACT US</a></li>
+                    <li><a href="#" onclick="showStoreLocator()">STORE LOCATOR</a></li>
+                    <li><a href="#" onclick="showShipping()">SHIPPING INFO</a></li>
+                    <li><a href="#" onclick="showReturns()">RETURN POLICY</a></li>
+                    <li><a href="#" onclick="showSizeGuide()">SIZE GUIDE</a></li>
+                    <li><a href="#" onclick="showFAQ()">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>COMPANY</h4>
+                <ul>
+                    <li><a href="#about">ABOUT US</a></li>
+                    <li><a href="#" onclick="showCareers()">CAREERS</a></li>
+                    <li><a href="#" onclick="showPress()">PRESS</a></li>
+                    <li><a href="#" onclick="showInvestors()">INVESTORS</a></li>
+                    <li><a href="#" onclick="showSustainability()">SUSTAINABILITY</a></li>
+                    <li><a href="#" onclick="showPartnership()">PARTNERSHIPS</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>COLLECTIONS</h4>
+                <ul>
+                    <li><a href="#products">NEW ARRIVALS</a></li>
+                    <li><a href="#" onclick="showWomen()">WOMEN</a></li>
+                    <li><a href="#" onclick="showMen()">MEN</a></li>
+                    <li><a href="#" onclick="showAccessories()">ACCESSORIES</a></li>
+                    <li><a href="#" onclick="showSale()">SALE</a></li>
+                    <li><a href="#" onclick="showGiftCard()">GIFT CARDS</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>FOLLOW US</h4>
+                <ul>
+                    <li><a href="#" onclick="openSocial('instagram')">INSTAGRAM</a></li>
+                    <li><a href="#" onclick="openSocial('facebook')">FACEBOOK</a></li>
+                    <li><a href="#" onclick="openSocial('twitter')">TWITTER</a></li>
+                    <li><a href="#" onclick="openSocial('pinterest')">PINTEREST</a></li>
+                    <li><a href="#" onclick="openSocial('youtube')">YOUTUBE</a></li>
+                    <li><a href="#" onclick="openSocial('tiktok')">TIKTOK</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>LEGAL</h4>
+                <ul>
+                    <li><a href="#" onclick="showPrivacy()">PRIVACY POLICY</a></li>
+                    <li><a href="#" onclick="showTerms()">TERMS & CONDITIONS</a></li>
+                    <li><a href="#" onclick="showCookies()">COOKIE POLICY</a></li>
+                    <li><a href="#" onclick="showAccessibility()">ACCESSIBILITY</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 KAIRA. ALL RIGHTS RESERVED. | DESIGNED IN INDONESIA</p>
+        </div>
+    </div>
+</footer>
+
+    <script>
+ // Global variables
+        let articles = [];
+        let cart = [];
+        let wishlist = [];
+        let currentFilter = 'all';
+
+        // Loading screen
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+                initializeArticles();
+            }, 2000);
+        });
+
+        // Initialize articles
+        function initializeArticles() {
+            loadArticlesFromAdmin();
+            renderArticles();
+            setupFilters();
+            loadCartAndWishlist();
+            initIntersectionObserver();
+        }
+
+        // Load articles from admin localStorage
+        function loadArticlesFromAdmin() {
+            try {
+                const savedArticles = localStorage.getItem('kaira_articles');
+                if (savedArticles) {
+                    articles = JSON.parse(savedArticles);
+                    console.log(`Loaded ${articles.length} articles from admin`);
+                } else {
+                    // Fallback to sample articles if no admin articles exist
+                    articles = [
+                         {
+                id: 1, 
+                title: 'FEMININE EMBRACING THE DARK SIDE OF ELEGANCE',
+                excerpt: 'Discover the hottest fashion trends for spring 2024. From vibrant colors to minimalist designs, explore what\'s trending this season.',
+                category: 'fashion',
+                image: 'img/new/artikel3.jpg',
+                author: 'LINA GARCIA-FERRADO',
+                date: '2024-03-15',
+                content: `
+                <h1>The Allure of Feminine Dark Green Style</h1>
+                <p>Dark green is the new black for women who want to embrace elegance with a touch of mystery. This rich and earthy color brings a sense of calm, confidence, and sophistication — making it perfect for both everyday outfits and special occasions.</p>
+                <p>Pairing dark green with flowing fabrics like satin or chiffon enhances the feminine feel while maintaining a bold statement. Midi dresses with puff sleeves, silk blouses tucked into high-waisted trousers, or dark green wrap skirts all give off an effortlessly graceful vibe.</p>
+                <p>To complete the look, gold accessories, muted nude heels, and a deep green handbag can elevate the overall style. For cooler seasons, a tailored dark green coat or velvet blazer adds warmth without compromising femininity.</p>
+                <p>Whether you're heading to a dinner date or simply strolling through the city, feminine dark green fashion invites admiration — blending strength with softness in the most stylish way.</p>
+                                `
+            },
+            {
+                id: 2,
+                title: 'ICONIC RED-CARPET LOOKS STAR',
+                excerpt: 'Learn how to achieve a natural, effortless look with minimal makeup. Perfect for everyday wear and busy lifestyles.',
+                category: 'beauty',
+                image: 'img/new/tas5.jpg',
+                author: ' MARGOT ROBBIE',
+                date: '2024-03-12',
+                content: `
+                <h1>Red-Carpet Beauty Secrets Revealed</h1>
+                <p>Red-carpet looks are not just about glamorous gowns — they’re about flawless makeup and confidence. To recreate the star-studded glow, start with a luminous base using a hydrating primer and radiant foundation. Highlight the high points of your face — cheekbones, nose bridge, and cupid’s bow — for that signature glow.</p>
+                <p>Bold eyeliner, voluminous lashes, and a classic red lip are timeless red-carpet staples. Choose makeup that stays put under lights and cameras, including setting spray and waterproof formulas. Finish the look with sleek hair or soft waves, depending on your personal style.</p>
+                <p>Confidence is key — wear your look like a true icon and let your inner star shine through.</p>
+
+                `
+            },
+            {
+                id: 3,
+                title: 'DANIELLE LUXEMBOURG IN BERLIN',
+                excerpt: 'Make conscious fashion choices that benefit both you and the environment. A guide to sustainable shopping.',
+                category: 'lifestyle',
+                image: 'img/new/artikel.jpg',
+                author: 'SUSTAINABLE FASHION',
+                date: '2024-03-10',
+                content: `
+                <h1>Danielle Luxembourg’s Sustainable Style in Berlin</h1>
+                <p>While exploring Berlin, Danielle Luxembourg proves that fashion can be both chic and conscious. Known for her commitment to eco-friendly brands, Danielle blends urban style with sustainable choices — from thrifted jackets to biodegradable fabrics.</p>
+                <p>She favors earthy tones and timeless silhouettes that align with her values, choosing pieces that tell a story. Her Berlin wardrobe includes organic cotton jeans, vintage boots, and handmade accessories from local artisans.</p>
+                <p>Danielle’s style reflects the vibrant culture of Berlin while promoting a greener future — proving that sustainability is always in fashion.</p>
+
+                `
+            },
+            {
+                id: 4,
+                title: 'EVERYTHING YOU NEED TO KNOW',
+                excerpt: 'Explore the vibrant color palette that will dominate summer fashion. From coral to sage green, find your perfect shade.',
+                category: 'trends',
+                image: 'img/new/artikel2.jpg',
+                author: 'CHIRSTYA',
+                date: '2024-03-08',
+                content: `
+                <h1>Everything You Need to Know About Summer Color Trends</h1>
+                <p>This summer, your wardrobe gets a color upgrade. From coral to sage green, vibrant hues are dominating the season. Coral brings an energetic warmth, perfect for beachwear or bright tops, while sage green offers a more grounded, elegant aesthetic.</p>
+                <p>Try mixing in electric blues and sunny yellows to add dynamic contrasts. These shades work best with breathable fabrics like cotton, linen, and bamboo — perfect for summer’s heat. Add a pop of color with accessories or go all-out with color-blocked outfits.</p>
+                <p>Whether you're into subtle accents or bold statements, there's a summer color for everyone. Embrace the trend and express yourself through your palette.</p>
+
+                `
+            },
+            {
+                id: 5,
+                title: 'TRENS RETRO',
+                excerpt: 'Create a versatile wardrobe with essential pieces that mix and match effortlessly. Quality over quantity approach.',
+                category: 'fashion',
+                image: 'img/new/11.jpg',
+                author: 'EMILY RATAJKOWSKI',
+                date: '2024-03-05',
+                content: `
+                <h1>The Return of Retro: Fashion’s Nostalgic Comeback</h1>
+                <p>Retro trends are making a fierce comeback, bringing the charm of past decades into modern wardrobes. From flared jeans and oversized sunglasses to colorful prints and vintage sneakers, the 70s to 90s are back in style.</p>
+                <p>Mix and match old-school staples with contemporary pieces for a balanced look. A vintage leather jacket over a modern midi dress, or wide-leg pants with a crop top, can revive your outfit with nostalgic flair.</p>
+                <p>Fashion cycles are proof that what once was old becomes new again — so dig into your closet (or your parents’) and embrace the retro wave with confidence and creativity.</p>
+
+                `
+            },
+            {
+                id: 6,
+                title: 'TREND JEWELRY',
+                excerpt: 'Establish a simple yet effective skincare routine. Learn about the must-have products for healthy, glowing skin.',
+                category: 'fashion',
+                image: 'img/new/cicin.jpg',
+                author: 'LARA SANCHEZ-PORTILLO<',
+                date: '2024-03-03',
+                content: `
+                <h1>Jewelry Trends That Are Shaping 2024</h1>
+                <p>This year’s jewelry trends celebrate individuality and bold statements. Oversized earrings, chunky rings, and layered necklaces are stealing the spotlight. Look for pieces that blend materials — pearls with metal, resin with gemstones — for a fresh, eclectic vibe.</p>
+                <p>Gold remains timeless, but silver and colored enamel are seeing a rise in popularity. Personalized jewelry like nameplates, zodiac charms, or birthstone pieces add a meaningful touch.</p>
+                <p>Whether you’re going minimalist or maximalist, let your accessories tell your story. Jewelry in 2024 is all about self-expression and creativity.</p>
+
+                `
+            },
+                    ];
+                    console.log('No admin articles found, using sample data');
+                }
+                
+                // Filter to only show published articles
+                articles = articles.filter(article => article.status === 'published');
+                
+            } catch (error) {
+                console.error('Error loading articles:', error);
+                articles = [];
+            }
+        }
+
+        // Initialize Intersection Observer for fade-in animations
+        function initIntersectionObserver() {
+            const options = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, options);
+
+            // Observe all article cards
+            document.querySelectorAll('.article-card').forEach(card => {
+                observer.observe(card);
+            });
+        }
+
+        // Animate article click
+        function animateArticleClick(articleCard) {
+            articleCard.classList.add('article-clicked');
+            
+            setTimeout(() => {
+                articleCard.classList.remove('article-clicked');
+            }, 600);
+        }
+
+        // Render articles with fade-in animation
+        function renderArticles(articlesToRender = articles) {
+            const grid = document.getElementById('articlesGrid');
+            grid.innerHTML = '';
+
+            if (articlesToRender.length === 0) {
+                grid.innerHTML = `
+                    <div class="no-articles" style="grid-column: 1 / -1;">
+                        <div class="no-articles-icon">📝</div>
+                        <div class="no-articles-text">No Articles Found</div>
+                        <div class="no-articles-subtext">Check back later for new content or try a different filter</div>
+                    </div>
+                `;
+                return;
+            }
+
+            articlesToRender.forEach((article, index) => {
+                const articleCard = document.createElement('div');
+                articleCard.className = 'article-card fade-in';
+                articleCard.style.transitionDelay = `${index * 50}ms`;
+                
+                articleCard.innerHTML = `
+                    <div class="article-image-container">
+                        <img src="${article.image}" alt="${article.title}" class="article-image">
+                        <div class="article-category">${article.category}</div>
+                    </div>
+                    <div class="article-info">
+                        <h3 class="article-title">${article.title}</h3>
+                        <p class="article-excerpt">${article.excerpt}</p>
+                        <div class="article-meta">
+                            <span class="article-date">${formatDate(article.date)}</span>
+                            <span class="article-author">By ${article.author}</span>
+                        </div>
+                    </div>
+                `;
+                
+                // Add click event with animation
+                articleCard.addEventListener('click', function() {
+                    animateArticleClick(this);
+                    setTimeout(() => {
+                        goToArticle(article.id);
+                    }, 300);
+                });
+                
+                grid.appendChild(articleCard);
+            });
+
+            // Trigger fade-in animations
+            setTimeout(() => {
+                document.querySelectorAll('.article-card').forEach(card => {
+                    card.classList.add('visible');
+                });
+            }, 50);
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+
+        // Go to article detail with smooth transition
+        function goToArticle(articleId) {
+            // Store article ID in localStorage for the detail page
+            localStorage.setItem('currentArticleId', articleId);
+            
+            // Add a smooth transition effect
+            document.body.style.opacity = '0.8';
+            document.body.style.transition = 'opacity 0.3s ease';
+            
+            setTimeout(() => {
+                window.location.href = 'article-detail.html';
+            }, 300);
+        }
+
+        // Setup filters with smooth animation
+        function setupFilters() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Don't do anything if already active
+                    if (this.classList.contains('active')) return;
+                    
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const filter = this.getAttribute('data-filter');
+                    currentFilter = filter;
+                    
+                    // Fade out current articles
+                    const articleCards = document.querySelectorAll('.article-card');
+                    articleCards.forEach(card => {
+                        card.style.opacity = '0';
+                        card.style.transform = 'translateY(10px)';
+                    });
+                    
+                    // Render new articles after fade out
+                    setTimeout(() => {
+                        if (filter === 'all') {
+                            renderArticles(articles);
+                        } else {
+                            const filteredArticles = articles.filter(article => article.category === filter);
+                            renderArticles(filteredArticles);
+                        }
+                    }, 300);
+                });
+            });
+        }
+
+        // Search functionality with smooth animation
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            // Fade out current articles
+            const articleCards = document.querySelectorAll('.article-card');
+            articleCards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(10px)';
+            });
+            
+            setTimeout(() => {
+                if (searchTerm.length > 0) {
+                    const filteredArticles = articles.filter(article => 
+                        article.title.toLowerCase().includes(searchTerm) ||
+                        article.excerpt.toLowerCase().includes(searchTerm) ||
+                        article.category.toLowerCase().includes(searchTerm) ||
+                        article.author.toLowerCase().includes(searchTerm)
+                    );
+                    renderArticles(filteredArticles);
+                } else {
+                    const currentArticles = currentFilter === 'all' ? articles : articles.filter(a => a.category === currentFilter);
+                    renderArticles(currentArticles);
+                }
+            }, 300);
+        });
+
+        // Auto-refresh articles every 10 seconds to check for new admin updates
+        setInterval(() => {
+            const currentArticleCount = articles.length;
+            loadArticlesFromAdmin();
+            if (articles.length !== currentArticleCount) {
+                renderArticles();
+                showNotification(`Articles updated! Found ${articles.length - currentArticleCount} new articles.`);
+            }
+        }, 10000);
+
+        // Cart and wishlist functions with smooth animations
+        function updateCartCount() {
+            const countElement = document.getElementById('cartCount');
+            countElement.textContent = cart.length;
+            
+            if (cart.length > 0) {
+                countElement.classList.add('show');
+            } else {
+                countElement.classList.remove('show');
+            }
+        }
+
+        function updateWishlistCount() {
+            const countElement = document.getElementById('wishlistCount');
+            countElement.textContent = wishlist.length;
+            
+            if (wishlist.length > 0) {
+                countElement.classList.add('show');
+            } else {
+                countElement.classList.remove('show');
+            }
+        }
+
+    
+
+        function renderCart() {
+            const cartContent = document.getElementById('cartContent');
+            
+            if (cart.length === 0) {
+                cartContent.innerHTML = `
+                    <div class="panel-empty">
+                        <div class="panel-empty-icon">🛒</div>
+                        <div class="panel-empty-text">Your cart is empty</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            let cartHTML = '';
+            let total = 0;
+            
+            cart.forEach(item => {
+                total += item.price;
+                cartHTML += `
+                    <div class="panel-item">
+                        <img src="${item.image}" alt="${item.name}" class="panel-item-image">
+                        <div class="panel-item-info">
+                            <div class="panel-item-name">${item.name}</div>
+                            <div class="panel-item-price">Rp ${item.price.toLocaleString()}</div>
+                            <button class="panel-item-remove" onclick="removeFromCart(${item.id})">Remove</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            cartHTML += `
+                <div style="padding: 15px; border-top: 1px solid #f0f0f0; margin-top: 15px; text-align: center;">
+                    <div style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">
+                        Total: Rp ${total.toLocaleString()}
+                    </div>
+                    <button style="width: 100%; padding: 12px; background: #000; color: #fff; border: none; border-radius: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all 0.3s ease;" onclick="checkout()">
+                        Checkout
+                    </button>
+                </div>
+            `;
+            
+            cartContent.innerHTML = cartHTML;
+        }
+
+        function renderWishlist() {
+            const wishlistContent = document.getElementById('wishlistContent');
+            
+            if (wishlist.length === 0) {
+                wishlistContent.innerHTML = `
+                    <div class="panel-empty">
+                        <div class="panel-empty-icon">♡</div>
+                        <div class="panel-empty-text">Your wishlist is empty</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            let wishlistHTML = '';
+            
+            wishlist.forEach(item => {
+                wishlistHTML += `
+                    <div class="panel-item">
+                        <img src="${item.image}" alt="${item.name}" class="panel-item-image">
+                        <div class="panel-item-info">
+                            <div class="panel-item-name">${item.name}</div>
+                            <div class="panel-item-price">Rp ${item.price.toLocaleString()}</div>
+                            <button class="panel-item-remove" onclick="removeFromWishlist(${item.id})">Remove</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            wishlistHTML += `
+                <a href="wishlist.html" style="display: inline-block; padding: 10px 16px; background: #000; color: #fff; text-decoration: none; border-radius: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-top: 15px; text-align: center; width: 100%; transition: all 0.3s ease;">
+                    View Wishlist
+                </a>
+            `;
+            
+            wishlistContent.innerHTML = wishlistHTML;
+        }
+
+        function removeFromCart(itemId) {
+            const itemIndex = cart.findIndex(item => item.id === itemId);
+            if (itemIndex > -1) {
+                const item = cart[itemIndex];
+                cart.splice(itemIndex, 1);
+                updateCartCount();
+                renderCart();
+                saveCartAndWishlist();
+                showNotification(`${item.name} removed from cart!`);
+            }
+        }
+
+        function removeFromWishlist(itemId) {
+            const itemIndex = wishlist.findIndex(item => item.id === itemId);
+            if (itemIndex > -1) {
+                const item = wishlist[itemIndex];
+                wishlist.splice(itemIndex, 1);
+                updateWishlistCount();
+                renderWishlist();
+                saveCartAndWishlist();
+                showNotification(`${item.name} removed from wishlist!`);
+            }
+        }
+
+        function toggleCart() {
+            const cartPanel = document.getElementById('cartPanel');
+            const wishlistPanel = document.getElementById('wishlistPanel');
+            
+            wishlistPanel.classList.remove('active');
+            cartPanel.classList.toggle('active');
+            renderCart();
+        }
+
+        function toggleWishlist() {
+            const wishlistPanel = document.getElementById('wishlistPanel');
+            const cartPanel = document.getElementById('cartPanel');
+            
+            cartPanel.classList.remove('active');
+            wishlistPanel.classList.toggle('active');
+            renderWishlist();
+        }
+
+        function toggleMenu() {
+            const hamburger = document.querySelector('.hamburger');
+            const sidebar = document.getElementById('sidebar');
+
+            hamburger.classList.toggle('active');
+            sidebar.classList.toggle('active');
+
+            const spans = hamburger.querySelectorAll('span');
+            if (hamburger.classList.contains('active')) {
+                spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+                spans[1].style.opacity = '0';
+                spans[2].style.transform = 'rotate(-45deg) translate(7px, -6px)';
+            } else {
+                spans[0].style.transform = 'none';
+                spans[1].style.opacity = '1';
+                spans[2].style.transform = 'none';
+            }
+        }
+
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2500);
+        }
+
+        function saveCartAndWishlist() {
+            localStorage.setItem('kaira_cart', JSON.stringify(cart));
+            localStorage.setItem('kaira_wishlist', JSON.stringify(wishlist));
+        }
+
+        function loadCartAndWishlist() {
+            const savedCart = localStorage.getItem('kaira_cart');
+            const savedWishlist = localStorage.getItem('kaira_wishlist');
+            
+            if (savedCart) {
+                cart = JSON.parse(savedCart);
+                updateCartCount();
+            }
+            
+            if (savedWishlist) {
+                wishlist = JSON.parse(savedWishlist);
+                updateWishlistCount();
+            }
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                showNotification('Your cart is empty!');
+                return;
+            }
+            
+            const total = cart.reduce((sum, item) => sum + item.price, 0);
+            showNotification(`Checkout successful! Total: Rp ${total.toLocaleString()}`);
+            
+            cart = [];
+            updateCartCount();
+            renderCart();
+            saveCartAndWishlist();
+            
+            document.getElementById('cartPanel').classList.remove('active');
+        }
+
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+
+        function showLogin() {
+            window.location.href = 'login.html';
+        }
+
+        function showHelp() {
+            showNotification('Contact customer service at help@kaira.com');
+        }
+
+        // Close panels when clicking outside
+        document.addEventListener('click', function(e) {
+            const cartPanel = document.getElementById('cartPanel');
+            const wishlistPanel = document.getElementById('wishlistPanel');
+            const cartIcon = document.querySelector('.cart-icon');
+            const wishlistIcon = document.querySelector('.wishlist-icon');
+            const sidebar = document.getElementById('sidebar');
+            const hamburger = document.querySelector('.hamburger');
+            
+            if (!cartPanel.contains(e.target) && !cartIcon.contains(e.target)) {
+                cartPanel.classList.remove('active');
+            }
+            
+            if (!wishlistPanel.contains(e.target) && !wishlistIcon.contains(e.target)) {
+                wishlistPanel.classList.remove('active');
+            }
+            
+            if (!sidebar.contains(e.target) && !hamburger.contains(e.target) && sidebar.classList.contains('active')) {
+                toggleMenu();
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.getElementById('cartPanel').classList.remove('active');
+                document.getElementById('wishlistPanel').classList.remove('active');
+                if (document.getElementById('sidebar').classList.contains('active')) {
+                    toggleMenu();
+                }
+            }
+        });
+        // View article details with smooth animation
+function viewArticleDetails(articleId) {
+    const article = articles.find(a => a.id === articleId);
+    
+    const modalBody = document.getElementById('modalBody');
+    modalBody.innerHTML = `
+        <div class="modal-image">
+            <img src="${article.image}" alt="${article.title}">
+        </div>
+        <div class="modal-info">
+            <h3 class="modal-article-title">${article.title}</h3>
+            <div class="modal-article-meta">
+                <span class="modal-article-author">By ${article.author}</span> |
+                <span class="modal-article-date">${article.date}</span>
+            </div>
+            <p class="modal-article-excerpt">${article.excerpt}</p>
+            <div class="modal-actions">
+                <a href="detail-artikel${article.id}.html" class="modal-btn" style="margin-top: 10px; display: inline-block; text-align: center; text-decoration: none;">
+                    Baca Selengkapnya
+                </a>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('productModal').classList.add('active');
+    
+}function goToArticle(articleId) {
+    // Store article ID in localStorage for the detail page
+    localStorage.setItem('currentArticleId', articleId);
+    
+    // Add a smooth transition effect
+    document.body.style.opacity = '0.8';
+    document.body.style.transition = 'opacity 0.3s ease';
+    
+    // Redirect to the specific article detail page
+    setTimeout(() => {
+        window.location.href = `detail-artikel${articleId}.html`;
+    }, 300);
+}
+
+    </script>
+</body>
+</html>
