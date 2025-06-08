@@ -99,7 +99,7 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* Category-specific animations - Enhanced for clearer distinction */
+        /* Category-specific animations */
         @keyframes dressAnimation {
             0% { transform: scale(1) rotate(0deg); opacity: 1; }
             50% { transform: scale(1.05) rotate(3deg); opacity: 0.92; }
@@ -268,6 +268,13 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
             font-weight: normal;
+        }
+
+        .right-icons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-right: 15px;
         }
 
         .cart-icon, .wishlist-icon {
@@ -903,6 +910,9 @@
         @media (max-width: 768px) {
             .header {
                 padding: 12px 20px;
+                position: sticky;
+                top: 0;
+                z-index: 100;
             }
 
             .logo {
@@ -911,6 +921,23 @@
 
             .nav-links {
                 display: none;
+            }
+
+            .right-icons {
+                display: flex;
+            }
+
+            .wishlist-icon, .cart-icon {
+                font-size: 16px;
+                padding: 6px;
+            }
+
+            .wishlist-count, .cart-count {
+                width: 14px;
+                height: 14px;
+                font-size: 8px;
+                top: -1px;
+                right: -1px;
             }
 
             .main-content {
@@ -933,6 +960,10 @@
             .side-panel {
                 width: 100%;
                 right: -100%;
+            }
+
+            .side-panel.active {
+                right: 0;
             }
 
             .modal-body {
@@ -965,6 +996,10 @@
 
             .product-image-container {
                 height: 220px;
+            }
+
+            .right-icons {
+                gap: 8px;
             }
         }
 
@@ -1078,7 +1113,7 @@
     <!-- Header -->
     <header class="header">
         <div class="left-header">
-            <div class="hamburger" onclick="toggleMenu()">
+            <div class="hamburger" onclick="toggleSidebar()">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -1086,25 +1121,24 @@
             <div class="logo" onclick="goHome()">KAIRA</div>
         </div>
         <nav class="nav-links">
-            <div class="search-box">
-                <input type="text" placeholder="Search" id="searchInput">
-            </div>
-            <a href="#" onclick="showLogin()"></a>
-            <a href="#" onclick="showHelp()"></a>
-            <div class="wishlist-icon" onclick="toggleWishlist()">
+          
+      
+        </nav>
+        <div class="right-icons">
+            <div class="wishlist-icon" onclick="toggleWishlist()" aria-label="Toggle Wishlist">
                 <span style="font-size: 14px;">♡</span>
                 <div class="wishlist-count" id="wishlistCount">0</div>
             </div>
-            <div class="cart-icon" onclick="toggleCart()">
+            <div class="cart-icon" onclick="toggleCart()" aria-label="Toggle Cart">
                 <span style="font-size: 14px;">🛒</span>
                 <div class="cart-count" id="cartCount">0</div>
             </div>
-        </nav>
+        </div>
     </header>
 
     <!-- Sidebar Menu -->
     <nav class="sidebar" id="sidebar">
-        <button class="sidebar-close" onclick="toggleMenu()" aria-label="Close menu">×</button>
+        <button class="sidebar-close" onclick="toggleSidebar()" aria-label="Close menu">×</button>
         <ul>
             <li><a href="index.html">HOME</a></li>
             <li><a href="match.html">STYLE RECOMMENDATION</a></li>
@@ -1114,6 +1148,9 @@
             <li><a href="contact.html">CONTACT</a></li>
         </ul>
     </nav>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
 
     <!-- Main Content -->
     <div class="main-content">
@@ -1357,7 +1394,7 @@
                 .map(product => ({
                     ...product,
                     image: product.image,
-                    category: validCategories.includes(product.category) ? product.category : 'dress' // Fallback to 'dress' if invalid
+                    category: validCategories.includes(product.category) ? product.category : 'dress'
                 }));
 
             console.log('Validated products:', products);
@@ -1408,7 +1445,7 @@
             };
         }
 
-        // Animate product based on category - robust handling
+        // Animate product based on category
         const animateProduct = debounce((productCard, category) => {
             if (!productCard || !category) {
                 console.warn('Invalid productCard or category:', { productCard, category });
@@ -1763,11 +1800,13 @@
         }
 
         // Toggle mobile menu with smooth animation
-        function toggleMenu() {
+        function toggleSidebar() {
             const hamburger = document.querySelector('.hamburger');
             const sidebar = document.getElementById('sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
             hamburger.classList.toggle('active');
             sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
             const spans = hamburger.querySelectorAll('span');
             if (hamburger.classList.contains('active')) {
                 spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
@@ -1882,7 +1921,7 @@
                 closeModal();
             }
             if (!sidebar.contains(e.target) && !hamburger.contains(e.target) && sidebar.classList.contains('active')) {
-                toggleMenu();
+                toggleSidebar();
             }
         });
 
@@ -1893,7 +1932,7 @@
                 document.getElementById('wishlistPanel').classList.remove('active');
                 closeModal();
                 if (document.getElementById('sidebar').classList.contains('active')) {
-                    toggleMenu();
+                    toggleSidebar();
                 }
             }
         });
