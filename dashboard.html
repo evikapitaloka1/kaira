@@ -1264,62 +1264,78 @@
                 image: 'img/new/3.jpg',
                 description: 'Elegant white blazer perfect for formal occasions. Made from premium fabric with sophisticated design.'
             },
-            {
-                id: 2,
-                name: 'GLASSES ',
-                price: 188000,
-                category: 'accessories',
-                image: 'img/new/2.jpg',
-                description: 'Luxurious glasses with premium quality. Perfect accessory for any outfit.'
-            },
-            {
-                id: 3,
-                name: 'COTTON HIJAB',
-                price: 120000,
-                category: 'accessories',
-                image: 'img/new/3.jpg',
-                description: 'Premium cotton hijab with modern design. Spacious and durable for everyday use.'
-            },
-            {
-                id: 4,
-                name: 'BLACK HEELS',
-                price: 650000,
-                category: 'shoes',
-                image: 'img/new/sepatu2.jpg',
-                description: 'Elegant black heels for sophisticated look. Comfortable and stylish for any occasion.'
-            },
-            {
-                id: 5,
-                name: 'SLING BAG',
-                price: 750000,
-                category: 'bags',
-                image: 'img/new/14.jpg',
-                description: 'Elegant and comfortable bag. Perfect for casual outings and warm weather.'
-            },
-            {
-                id: 6,
-                name: 'GOLD RINGS',
-                price: 450000,
-                category: 'accessories',
-                image: 'img/new/cicin.jpg',
-                description: 'Elegant gold accessories for special occasions. Includes necklace and earrings.'
-            },
-             {
-                id: 7,
-                name: 'LONG DRESS MAROON',
-                price: 294000,
-                category: 'dress',
-                image: 'img/new/7.jpg',
-                description: 'Elegant longdress perfect for formal occasions. Made from premium fabric with sophisticated design.'
-            },
-            {
-                id: 8,
-                name: 'BLACK SKIRT',
-                price: 187000,
-                category: 'dress',
-                image: 'img/new/1.jpg',
-                description: 'Elegant black skirt perfect for formal occasions. Made from premium fabric with sophisticated design.'
-            },
+           [
+    {
+        "id": 2,
+        "name": "GLASSES",
+        "price": 188000,
+        "category": "accessories",
+        "image": "img/new/2.jpg",
+        "description": "Luxurious glasses with premium quality. Perfect accessory for any outfit.",
+        "stock": 50,
+        "status": "active"
+    },
+    {
+        "id": 3,
+        "name": "COTTON HIJAB",
+        "price": 120000,
+        "category": "accessories",
+        "image": "img/new/3.jpg",
+        "description": "Premium cotton hijab with modern design. Spacious and durable for everyday use.",
+        "stock": 50,
+        "status": "active"
+    },
+    {
+        "id": 4,
+        "name": "BLACK HEELS",
+        "price": 650000,
+        "category": "shoes",
+        "image": "img/new/sepatu2.jpg",
+        "description": "Elegant black heels for sophisticated look. Comfortable and stylish for any occasion.",
+        "stock": 50,
+        "status": "active"
+    },
+    {
+        "id": 5,
+        "name": "SLING BAG",
+        "price": 750000,
+        "category": "bags",
+        "image": "img/new/14.jpg",
+        "description": "Elegant and comfortable bag. Perfect for casual outings and warm weather.",
+        "stock": 50,
+        "status": "active"
+    },
+    {
+        "id": 6,
+        "name": "GOLD RINGS",
+        "price": 450000,
+        "category": "accessories",
+        "image": "img/new/cicin.jpg",
+        "description": "Elegant gold accessories for special occasions. Includes necklace and earrings.",
+        "stock": 50,
+        "status": "active"
+    },
+    {
+        "id": 7,
+        "name": "LONG DRESS MAROON",
+        "price": 294000,
+        "category": "dress",
+        "image": "img/new/7.jpg",
+        "description": "Elegant longdress perfect for formal occasions. Made from premium fabric with sophisticated design.",
+        "stock": 50,
+        "status": "active"
+    },
+    {
+        "id": 8,
+        "name": "BLACK SKIRT",
+        "price": 187000,
+        "category": "dress",
+        "image": "img/new/1.jpg",
+        "description": "Elegant black skirt perfect for formal occasions. Made from premium fabric with sophisticated design.",
+        "stock": 50,
+        "status": "active"
+    }
+]
                     ];
                     console.log('No products found in localStorage, using sample data');
                     saveProducts();
@@ -1339,102 +1355,105 @@
                     console.log(`Loaded ${articles.length} articles from localStorage`);
                 } else {
                     articles = [
-                        {
-                id: 1, 
-                title: 'FEMININE EMBRACING THE DARK SIDE OF ELEGANCE',
-                excerpt: 'Discover the hottest fashion trends for spring 2024. From vibrant colors to minimalist designs, explore what\'s trending this season.',
-                category: 'fashion',
-                image: 'img/new/artikel3.jpg',
-                author: 'LINA GARCIA-FERRADO',
-                date: '2024-03-15',
-                content: `
+                       [
+    {
+        "id": 1,
+        "title": "FEMININE EMBRACING THE DARK SIDE OF ELEGANCE",
+        "excerpt": "Discover the hottest fashion trends for spring 2024. From vibrant colors to minimalist designs, explore what's trending this season.",
+        "category": "fashion",
+        "image": "img/new/artikel3.jpg",
+        "author": "LINA GARCIA-FERRADO",
+        "date": "2024-03-15",
+        "content": `
                 <h1>The Allure of Feminine Dark Green Style</h1>
                 <p>Dark green is the new black for women who want to embrace elegance with a touch of mystery. This rich and earthy color brings a sense of calm, confidence, and sophistication — making it perfect for both everyday outfits and special occasions.</p>
                 <p>Pairing dark green with flowing fabrics like satin or chiffon enhances the feminine feel while maintaining a bold statement. Midi dresses with puff sleeves, silk blouses tucked into high-waisted trousers, or dark green wrap skirts all give off an effortlessly graceful vibe.</p>
                 <p>To complete the look, gold accessories, muted nude heels, and a deep green handbag can elevate the overall style. For cooler seasons, a tailored dark green coat or velvet blazer adds warmth without compromising femininity.</p>
                 <p>Whether you're heading to a dinner date or simply strolling through the city, feminine dark green fashion invites admiration — blending strength with softness in the most stylish way.</p>
-                                `
-            },
-            {
-                id: 2,
-                title: 'ICONIC RED-CARPET LOOKS STAR',
-                excerpt: 'Learn how to achieve a natural, effortless look with minimal makeup. Perfect for everyday wear and busy lifestyles.',
-                category: 'beauty',
-                image: 'img/new/tas5.jpg',
-                author: ' MARGOT ROBBIE',
-                date: '2024-03-12',
-                content: `
+        `,
+        "status": "published"
+    },
+    {
+        "id": 2,
+        "title": "ICONIC RED-CARPET LOOKS STAR",
+        "excerpt": "Learn how to achieve a natural, effortless look with minimal makeup. Perfect for everyday wear and busy lifestyles.",
+        "category": "beauty",
+        "image": "img/new/tas5.jpg",
+        "author": "MARGOT ROBBIE",
+        "date": "2024-03-12",
+        "content": `
                 <h1>Red-Carpet Beauty Secrets Revealed</h1>
                 <p>Red-carpet looks are not just about glamorous gowns — they’re about flawless makeup and confidence. To recreate the star-studded glow, start with a luminous base using a hydrating primer and radiant foundation. Highlight the high points of your face — cheekbones, nose bridge, and cupid’s bow — for that signature glow.</p>
                 <p>Bold eyeliner, voluminous lashes, and a classic red lip are timeless red-carpet staples. Choose makeup that stays put under lights and cameras, including setting spray and waterproof formulas. Finish the look with sleek hair or soft waves, depending on your personal style.</p>
                 <p>Confidence is key — wear your look like a true icon and let your inner star shine through.</p>
-
-                `
-            },
-            {
-                id: 3,
-                title: 'DANIELLE LUXEMBOURG IN BERLIN',
-                excerpt: 'Make conscious fashion choices that benefit both you and the environment. A guide to sustainable shopping.',
-                category: 'lifestyle',
-                image: 'img/new/artikel.jpg',
-                author: 'SUSTAINABLE FASHION',
-                date: '2024-03-10',
-                content: `
+        `,
+        "status": "published"
+    },
+    {
+        "id": 3,
+        "title": "DANIELLE LUXEMBOURG IN BERLIN",
+        "excerpt": "Make conscious fashion choices that benefit both you and the environment. A guide to sustainable shopping.",
+        "category": "lifestyle",
+        "image": "img/new/artikel.jpg",
+        "author": "SUSTAINABLE FASHION",
+        "date": "2024-03-10",
+        "content": `
                 <h1>Danielle Luxembourg’s Sustainable Style in Berlin</h1>
                 <p>While exploring Berlin, Danielle Luxembourg proves that fashion can be both chic and conscious. Known for her commitment to eco-friendly brands, Danielle blends urban style with sustainable choices — from thrifted jackets to biodegradable fabrics.</p>
                 <p>She favors earthy tones and timeless silhouettes that align with her values, choosing pieces that tell a story. Her Berlin wardrobe includes organic cotton jeans, vintage boots, and handmade accessories from local artisans.</p>
                 <p>Danielle’s style reflects the vibrant culture of Berlin while promoting a greener future — proving that sustainability is always in fashion.</p>
-
-                `
-            },
-            {
-                id: 4,
-                title: 'EVERYTHING YOU NEED TO KNOW',
-                excerpt: 'Explore the vibrant color palette that will dominate summer fashion. From coral to sage green, find your perfect shade.',
-                category: 'trends',
-                image: 'img/new/artikel2.jpg',
-                author: 'CHIRSTYA',
-                date: '2024-03-08',
-                content: `
+        `,
+        "status": "published"
+    },
+    {
+        "id": 4,
+        "title": "EVERYTHING YOU NEED TO KNOW",
+        "excerpt": "Explore the vibrant color palette that will dominate summer fashion. From coral to sage green, find your perfect shade.",
+        "category": "trends",
+        "image": "img/new/artikel2.jpg",
+        "author": "CHIRSTYA",
+        "date": "2024-03-08",
+        "content": `
                 <h1>Everything You Need to Know About Summer Color Trends</h1>
                 <p>This summer, your wardrobe gets a color upgrade. From coral to sage green, vibrant hues are dominating the season. Coral brings an energetic warmth, perfect for beachwear or bright tops, while sage green offers a more grounded, elegant aesthetic.</p>
                 <p>Try mixing in electric blues and sunny yellows to add dynamic contrasts. These shades work best with breathable fabrics like cotton, linen, and bamboo — perfect for summer’s heat. Add a pop of color with accessories or go all-out with color-blocked outfits.</p>
                 <p>Whether you're into subtle accents or bold statements, there's a summer color for everyone. Embrace the trend and express yourself through your palette.</p>
-
-                `
-            },
-            {
-                id: 5,
-                title: 'TRENS RETRO<',
-                excerpt: 'Create a versatile wardrobe with essential pieces that mix and match effortlessly. Quality over quantity approach.',
-                category: 'fashion',
-                image: 'img/new/11.jpg',
-                author: 'EMILY RATAJKOWSKI',
-                date: '2024-03-05',
-                content: `
+        `,
+        "status": "published"
+    },
+    {
+        "id": 5,
+        "title": "TRENS RETRO",
+        "excerpt": "Create a versatile wardrobe with essential pieces that mix and match effortlessly. Quality over quantity approach.",
+        "category": "fashion",
+        "image": "img/new/11.jpg",
+        "author": "EMILY RATAJKOWSKI",
+        "date": "2024-03-05",
+        "content": `
                 <h1>The Return of Retro: Fashion’s Nostalgic Comeback</h1>
                 <p>Retro trends are making a fierce comeback, bringing the charm of past decades into modern wardrobes. From flared jeans and oversized sunglasses to colorful prints and vintage sneakers, the 70s to 90s are back in style.</p>
                 <p>Mix and match old-school staples with contemporary pieces for a balanced look. A vintage leather jacket over a modern midi dress, or wide-leg pants with a crop top, can revive your outfit with nostalgic flair.</p>
                 <p>Fashion cycles are proof that what once was old becomes new again — so dig into your closet (or your parents’) and embrace the retro wave with confidence and creativity.</p>
-
-                `
-            },
-            {
-                id: 6,
-                title: 'TREND JEWELRY',
-                excerpt: 'Establish a simple yet effective skincare routine. Learn about the must-have products for healthy, glowing skin.',
-                category: 'beauty',
-                image: 'img/new/cicin.jpg',
-                author: 'LARA SANCHEZ-PORTILLO<',
-                date: '2024-03-03',
-                content: `
+        `,
+        "status": "published"
+    },
+    {
+        "id": 6,
+        "title": "TREND JEWELRY",
+        "excerpt": "Establish a simple yet effective skincare routine. Learn about the must-have products for healthy, glowing skin.",
+        "category": "beauty",
+        "image": "img/new/cicin.jpg",
+        "author": "LARA SANCHEZ-PORTILLO",
+        "date": "2024-03-03",
+        "content": `
                 <h1>Jewelry Trends That Are Shaping 2024</h1>
                 <p>This year’s jewelry trends celebrate individuality and bold statements. Oversized earrings, chunky rings, and layered necklaces are stealing the spotlight. Look for pieces that blend materials — pearls with metal, resin with gemstones — for a fresh, eclectic vibe.</p>
                 <p>Gold remains timeless, but silver and colored enamel are seeing a rise in popularity. Personalized jewelry like nameplates, zodiac charms, or birthstone pieces add a meaningful touch.</p>
                 <p>Whether you’re going minimalist or maximalist, let your accessories tell your story. Jewelry in 2024 is all about self-expression and creativity.</p>
-
-                `
-            },
+        `,
+        "status": "published"
+    }
+]
                     ];
                     console.log('No articles found in localStorage, using sample data');
                     saveArticles();
