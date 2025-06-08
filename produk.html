@@ -14,7 +14,7 @@
         }
 
         body {
-            font-family:  'Helvetica Neue', Arial, sans-serif;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
             background-color: #ffffff;
             color: #333;
             line-height: 1.6;
@@ -99,54 +99,58 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* Category-specific animations - Smoother versions */
+        /* Category-specific animations - Enhanced for clearer distinction */
         @keyframes dressAnimation {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.03); }
-            100% { transform: scale(1); }
+            0% { transform: scale(1) rotate(0deg); opacity: 1; }
+            50% { transform: scale(1.05) rotate(3deg); opacity: 0.92; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
         }
 
         @keyframes shoesAnimation {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-            100% { transform: translateY(0); }
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(-4deg); }
+            100% { transform: translateY(0) rotate(0deg); }
         }
 
         @keyframes accessoriesAnimation {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.03); opacity: 0.9; }
-            100% { transform: scale(1); opacity: 1; }
+            0% { transform: scale(1) translateX(0); opacity: 1; }
+            50% { transform: scale(1.04) translateX(6px); opacity: 0.88; }
+            100% { transform: scale(1) translateX(0); opacity: 1; }
         }
 
         @keyframes bagsAnimation {
-            0% { transform: translateX(0); }
-            25% { transform: translateX(-3px); }
-            50% { transform: translateX(3px); }
-            75% { transform: translateX(-2px); }
-            100% { transform: translateX(0); }
+            0% { transform: translateX(0) rotate(0deg); }
+            25% { transform: translateX(-6px) rotate(-3deg); }
+            50% { transform: translateX(6px) rotate(3deg); }
+            75% { transform: translateX(-3px) rotate(-1.5deg); }
+            100% { transform: translateX(0) rotate(0deg); }
         }
 
         @keyframes smoothGlow {
             0% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
-            50% { box-shadow: 0 0 15px 2px rgba(0, 0, 0, 0.1); }
+            50% { box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.15); }
             100% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
         }
 
         /* Animation classes */
         .animate-dress {
-            animation: dressAnimation 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), smoothGlow 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            animation: dressAnimation 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                       smoothGlow 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         .animate-shoes {
-            animation: shoesAnimation 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), smoothGlow 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            animation: shoesAnimation 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                       smoothGlow 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         .animate-accessories {
-            animation: accessoriesAnimation 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), smoothGlow 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            animation: accessoriesAnimation 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                       smoothGlow 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         .animate-bags {
-            animation: bagsAnimation 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), smoothGlow 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            animation: bagsAnimation 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
+                       smoothGlow 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         /* Special effect for clicked products */
@@ -157,20 +161,20 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.3);
             border-radius: 6px;
             opacity: 0;
             z-index: 1;
-            animation: rippleEffect 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            animation: rippleEffect 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             pointer-events: none;
         }
 
         @keyframes rippleEffect {
-            0% { opacity: 0.5; transform: scale(0.8); }
-            100% { opacity: 0; transform: scale(1.05); }
+            0% { opacity: 0.6; transform: scale(0.85); }
+            100% { opacity: 0; transform: scale(1.1); }
         }
 
-       /* Header Styles */
+        /* Header Styles */
         .header {
             display: flex;
             justify-content: space-between;
@@ -301,7 +305,7 @@
             transform: scale(1);
         }
 
-/* Sidebar */
+        /* Sidebar */
         .sidebar {
             position: fixed;
             top: 0;
@@ -378,13 +382,6 @@
         .sidebar-overlay.active {
             opacity: 1;
             visibility: visible;
-        }
-
-        /* Main Content */
-        .main-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 15px;
         }
 
         /* Main Content */
@@ -970,6 +967,7 @@
                 height: 220px;
             }
         }
+
         /* Footer */
         .footer {
             background-color: #000;
@@ -1068,7 +1066,6 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-
     </style>
 </head>
 <body>
@@ -1077,10 +1074,6 @@
         <div class="loading-logo">KAIRA</div>
         <div class="loading-text">Products</div>
         <div class="loading-spinner"></div>
-    </div>
-    <!-- Loading Animation -->
-    <div class="loading" id="loading">
-        <div class="spinner"></div>
     </div>
     <!-- Header -->
     <header class="header">
@@ -1098,12 +1091,10 @@
             </div>
             <a href="#" onclick="showLogin()"></a>
             <a href="#" onclick="showHelp()"></a>
-            
             <div class="wishlist-icon" onclick="toggleWishlist()">
                 <span style="font-size: 14px;">♡</span>
                 <div class="wishlist-count" id="wishlistCount">0</div>
             </div>
-            
             <div class="cart-icon" onclick="toggleCart()">
                 <span style="font-size: 14px;">🛒</span>
                 <div class="cart-count" id="cartCount">0</div>
@@ -1111,13 +1102,13 @@
         </nav>
     </header>
 
-     <!-- Sidebar Menu -->
+    <!-- Sidebar Menu -->
     <nav class="sidebar" id="sidebar">
         <button class="sidebar-close" onclick="toggleMenu()" aria-label="Close menu">×</button>
         <ul>
             <li><a href="index.html">HOME</a></li>
-            <li><a href="match.html">STYLE RECOMENDATION</a></li>
-            <li><a href="produk.html">PRODUK</a></li>
+            <li><a href="match.html">STYLE RECOMMENDATION</a></li>
+            <li><a href="produk.html">PRODUCTS</a></li>
             <li><a href="artikel.html">ARTICLE</a></li>
             <li><a href="about.html">ABOUT KAIRA</a></li>
             <li><a href="contact.html">CONTACT</a></li>
@@ -1190,102 +1181,105 @@
 
     <!-- Notification -->
     <div id="notification" class="notification"></div>
+
     <!-- Footer -->
-<footer class="footer" id="contact">
-    <div class="footer-container">
-        <div class="footer-logo">KAIRA</div>
-        <div class="footer-content">
-            <div class="footer-column">
-                <h4>CUSTOMER SERVICE</h4>
-                <ul>
-                    <li><a href="#" onclick="showContact()">CONTACT US</a></li>
-                    <li><a href="#" onclick="showStoreLocator()">STORE LOCATOR</a></li>
-                    <li><a href="#" onclick="showShipping()">SHIPPING INFO</a></li>
-                    <li><a href="#" onclick="showReturns()">RETURN POLICY</a></li>
-                    <li><a href="#" onclick="showSizeGuide()">SIZE GUIDE</a></li>
-                    <li><a href="#" onclick="showFAQ()">FAQ</a></li>
-                </ul>
+    <footer class="footer" id="contact">
+        <div class="footer-container">
+            <div class="footer-logo">KAIRA</div>
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h4>CUSTOMER SERVICE</h4>
+                    <ul>
+                        <li><a href="#" onclick="showContact()">CONTACT US</a></li>
+                        <li><a href="#" onclick="showStoreLocator()">STORE LOCATOR</a></li>
+                        <li><a href="#" onclick="showShipping()">SHIPPING INFO</a></li>
+                        <li><a href="#" onclick="showReturns()">RETURN POLICY</a></li>
+                        <li><a href="#" onclick="showSizeGuide()">SIZE GUIDE</a></li>
+                        <li><a href="#" onclick="showFAQ()">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>COMPANY</h4>
+                    <ul>
+                        <li><a href="#about">ABOUT US</a></li>
+                        <li><a href="#" onclick="showCareers()">CAREERS</a></li>
+                        <li><a href="#" onclick="showPress()">PRESS</a></li>
+                        <li><a href="#" onclick="showInvestors()">INVESTORS</a></li>
+                        <li><a href="#" onclick="showSustainability()">SUSTAINABILITY</a></li>
+                        <li><a href="#" onclick="showPartnership()">PARTNERSHIPS</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>COLLECTIONS</h4>
+                    <ul>
+                        <li><a href="#products">NEW ARRIVALS</a></li>
+                        <li><a href="#" onclick="showWomen()">WOMEN</a></li>
+                        <li><a href="#" onclick="showMen()">MEN</a></li>
+                        <li><a href="#" onclick="showAccessories()">ACCESSORIES</a></li>
+                        <li><a href="#" onclick="showSale()">SALE</a></li>
+                        <li><a href="#" onclick="showGiftCard()">GIFT CARDS</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>FOLLOW US</h4>
+                    <ul>
+                        <li><a href="#" onclick="openSocial('instagram')">INSTAGRAM</a></li>
+                        <li><a href="#" onclick="openSocial('facebook')">FACEBOOK</a></li>
+                        <li><a href="#" onclick="openSocial('twitter')">TWITTER</a></li>
+                        <li><a href="#" onclick="openSocial('pinterest')">PINTEREST</a></li>
+                        <li><a href="#" onclick="openSocial('youtube')">YOUTUBE</a></li>
+                        <li><a href="#" onclick="openSocial('tiktok')">TIKTOK</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>LEGAL</h4>
+                    <ul>
+                        <li><a href="#" onclick="showPrivacy()">PRIVACY POLICY</a></li>
+                        <li><a href="#" onclick="showTerms()">TERMS & CONDITIONS</a></li>
+                        <li><a href="#" onclick="showCookies()">COOKIE POLICY</a></li>
+                        <li><a href="#" onclick="showAccessibility()">ACCESSIBILITY</a></li>
+                    </ul>
+                </div>
             </div>
-            <div class="footer-column">
-                <h4>COMPANY</h4>
-                <ul>
-                    <li><a href="#about">ABOUT US</a></li>
-                    <li><a href="#" onclick="showCareers()">CAREERS</a></li>
-                    <li><a href="#" onclick="showPress()">PRESS</a></li>
-                    <li><a href="#" onclick="showInvestors()">INVESTORS</a></li>
-                    <li><a href="#" onclick="showSustainability()">SUSTAINABILITY</a></li>
-                    <li><a href="#" onclick="showPartnership()">PARTNERSHIPS</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h4>COLLECTIONS</h4>
-                <ul>
-                    <li><a href="#products">NEW ARRIVALS</a></li>
-                    <li><a href="#" onclick="showWomen()">WOMEN</a></li>
-                    <li><a href="#" onclick="showMen()">MEN</a></li>
-                    <li><a href="#" onclick="showAccessories()">ACCESSORIES</a></li>
-                    <li><a href="#" onclick="showSale()">SALE</a></li>
-                    <li><a href="#" onclick="showGiftCard()">GIFT CARDS</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h4>FOLLOW US</h4>
-                <ul>
-                    <li><a href="#" onclick="openSocial('instagram')">INSTAGRAM</a></li>
-                    <li><a href="#" onclick="openSocial('facebook')">FACEBOOK</a></li>
-                    <li><a href="#" onclick="openSocial('twitter')">TWITTER</a></li>
-                    <li><a href="#" onclick="openSocial('pinterest')">PINTEREST</a></li>
-                    <li><a href="#" onclick="openSocial('youtube')">YOUTUBE</a></li>
-                    <li><a href="#" onclick="openSocial('tiktok')">TIKTOK</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h4>LEGAL</h4>
-                <ul>
-                    <li><a href="#" onclick="showPrivacy()">PRIVACY POLICY</a></li>
-                    <li><a href="#" onclick="showTerms()">TERMS & CONDITIONS</a></li>
-                    <li><a href="#" onclick="showCookies()">COOKIE POLICY</a></li>
-                    <li><a href="#" onclick="showAccessibility()">ACCESSIBILITY</a></li>
-                </ul>
+            <div class="footer-bottom">
+                <p>© 2025 KAIRA. ALL RIGHTS RESERVED. | DESIGNED IN INDONESIA</p>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p>© 2025 KAIRA. ALL RIGHTS RESERVED. | DESIGNED IN INDONESIA</p>
-        </div>
-    </div>
-</footer>
+    </footer>
+
     <script>
         // Global variables
         let products = [];
         let cart = [];
         let wishlist = [];
         let currentFilter = 'all';
+        const validCategories = ['dress', 'shoes', 'accessories', 'bags'];
 
-        // Sample products data
+        // Sample products data with corrected categories
         const sampleProducts = [
             {
                 id: 1,
                 name: 'WHITE BLAZER',
-                price: 324.000,
+                price: 324000,
                 category: 'dress',
                 image: 'img/new/3.jpg',
-                description: 'Elegant whitw blazer perfect for formal occasions. Made from premium fabric with sophisticated design.'
+                description: 'Elegant white blazer perfect for formal occasions. Made from premium fabric with sophisticated design.'
             },
             {
                 id: 2,
-                name: 'GLASSES ',
+                name: 'GLASSES',
                 price: 188000,
                 category: 'accessories',
                 image: 'img/new/2.jpg',
-                description: 'Luxurious cotton hijab with premium quality. Perfect accessory for any outfit.'
+                description: 'Stylish glasses to complement any outfit. Lightweight and durable.'
             },
             {
                 id: 3,
                 name: 'COTTON HIJAB',
-                price: 1200000,
+                price: 120000,
                 category: 'accessories',
                 image: 'img/new/3.jpg',
-                description: 'Premium cotton hijab with modern design. Spacious and durable for everyday use.'
+                description: 'Premium cotton hijab with modern design. Comfortable for everyday wear.'
             },
             {
                 id: 4,
@@ -1293,7 +1287,7 @@
                 price: 650000,
                 category: 'shoes',
                 image: 'img/new/sepatu2.jpg',
-                description: 'Elegant black heels for sophisticated look. Comfortable and stylish for any occasion.'
+                description: 'Elegant black heels for a sophisticated look. Comfortable and stylish for any occasion.'
             },
             {
                 id: 5,
@@ -1301,7 +1295,7 @@
                 price: 750000,
                 category: 'bags',
                 image: 'img/new/14.jpg',
-                description: 'Elegant and comfortable bag. Perfect for casual outings and warm weather.'
+                description: 'Elegant and spacious sling bag. Perfect for casual outings.'
             },
             {
                 id: 6,
@@ -1309,7 +1303,7 @@
                 price: 450000,
                 category: 'accessories',
                 image: 'img/new/cicin.jpg',
-                description: 'Elegant gold accessories for special occasions. Includes necklace and earrings.'
+                description: 'Elegant gold rings for special occasions. Timeless design.'
             },
             {
                 id: 7,
@@ -1317,7 +1311,7 @@
                 price: 890000,
                 category: 'dress',
                 image: 'img/new/7.jpg',
-                description: 'Elegant longdress perfect for formal occasions. Made from premium fabric with sophisticated design'
+                description: 'Elegant maroon long dress perfect for formal occasions. Made from premium fabric.'
             },
             {
                 id: 8,
@@ -1325,11 +1319,10 @@
                 price: 187000,
                 category: 'dress',
                 image: 'img/new/1.jpg',
-                description: 'Elegant black skirt perfect for formal occasions. Made from premium fabric with sophisticated design.'
-            },
-            
+                description: 'Elegant black skirt perfect for formal or casual wear. Made from premium fabric.'
+            }
         ];
-        
+
         // Loading screen
         window.addEventListener('load', function() {
             setTimeout(() => {
@@ -1340,47 +1333,45 @@
 
         // Initialize products
         function initializeProducts() {
-    let products = [];
-    const savedProducts = localStorage.getItem('kaira_products');
-    console.log('savedProducts from localStorage:', savedProducts); // Debug
+            const savedProducts = localStorage.getItem('kaira_products');
+            console.log('savedProducts from localStorage:', savedProducts);
 
-    if (savedProducts) {
-        try {
-            products = JSON.parse(savedProducts);
-            console.log(`Loaded ${products.length} products from localStorage`);
-        } catch (e) {
-            console.error('Error parsing localStorage products:', e);
-            products = sampleProducts; // Fallback to sampleProducts on error
-            localStorage.setItem('kaira_products', JSON.stringify(sampleProducts));
+            if (savedProducts) {
+                try {
+                    products = JSON.parse(savedProducts);
+                    console.log(`Loaded ${products.length} products from localStorage`);
+                } catch (e) {
+                    console.error('Error parsing localStorage products:', e);
+                    products = sampleProducts;
+                    localStorage.setItem('kaira_products', JSON.stringify(sampleProducts));
+                }
+            } else {
+                products = sampleProducts;
+                console.log('No products in localStorage, using sampleProducts:', products);
+                localStorage.setItem('kaira_products', JSON.stringify(sampleProducts));
+            }
+
+            // Validate and correct product categories
+            products = products
+                .filter(p => !p.status || p.status === 'active')
+                .map(product => ({
+                    ...product,
+                    image: product.image,
+                    category: validCategories.includes(product.category) ? product.category : 'dress' // Fallback to 'dress' if invalid
+                }));
+
+            console.log('Validated products:', products);
+
+            const validProductIds = products.map(p => p.id);
+            cart = cart.filter(item => validProductIds.includes(item.id));
+            wishlist = wishlist.filter(item => validProductIds.includes(item.id));
+            saveCartAndWishlist();
+
+            renderProducts(products);
+            setupFilters();
+            loadCartAndWishlist();
+            initIntersectionObserver();
         }
-    } else {
-        products = sampleProducts; // Fallback to sampleProducts if localStorage is empty
-        console.log('No products in localStorage, using sampleProducts:', products);
-        localStorage.setItem('kaira_products', JSON.stringify(sampleProducts));
-    }
-
-    // Filter products (handle missing status)
-    products = products
-        .filter(p => !p.status || p.status === 'active') // Include products without status
-        .map(product => ({
-            ...product,
-            image: product.image // Remove unnecessary replace since sampleProducts doesn't use w=100&h=100
-        }));
-
-    console.log('Filtered products:', products); // Debug
-
-    // Validate cart and wishlist
-    const validProductIds = products.map(p => p.id);
-    cart = cart.filter(item => validProductIds.includes(item.id));
-    wishlist = wishlist.filter(item => validProductIds.includes(item.id));
-    saveCartAndWishlist();
-
-    // Render products and set up other functionality
-    renderProducts(products);
-    setupFilters();
-    loadCartAndWishlist();
-    initIntersectionObserver();
-}
 
         // Initialize Intersection Observer for fade-in animations
         function initIntersectionObserver() {
@@ -1399,58 +1390,73 @@
                 });
             }, options);
 
-            // Observe all product cards
             document.querySelectorAll('.product-card').forEach(card => {
                 observer.observe(card);
             });
         }
 
-        // Animate product based on category - smoother animations
-        function animateProduct(productCard, category) {
-            // Remove any existing animation classes
-            productCard.classList.remove('animate-dress', 'animate-shoes', 'animate-accessories', 'animate-bags', 'product-clicked');
-            
-            // Add clicked effect
-            productCard.classList.add('product-clicked');
-            
-            // Add category-specific animation
-            switch(category) {
-                case 'dress':
-                    productCard.classList.add('animate-dress');
-                    break;
-                case 'shoes':
-                    productCard.classList.add('animate-shoes');
-                    break;
-                case 'accessories':
-                    productCard.classList.add('animate-accessories');
-                    break;
-                case 'bags':
-                    productCard.classList.add('animate-bags');
-                    break;
-                default:
-                    productCard.classList.add('animate-dress'); // Default animation
+        // Debounce function to prevent animation stacking
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Animate product based on category - robust handling
+        const animateProduct = debounce((productCard, category) => {
+            if (!productCard || !category) {
+                console.warn('Invalid productCard or category:', { productCard, category });
+                return;
             }
-            
-            // Remove animation classes after animation completes
+            productCard.classList.remove('animate-dress', 'animate-shoes', 'animate-accessories', 'animate-bags', 'product-clicked');
+            productCard.classList.add('product-clicked');
+            if (validCategories.includes(category)) {
+                productCard.classList.add(`animate-${category}`);
+                console.log(`Applying animation for category: ${category}`);
+            } else {
+                console.warn(`Invalid category '${category}', using default 'dress' animation`);
+                productCard.classList.add('animate-dress');
+            }
             setTimeout(() => {
                 productCard.classList.remove('animate-dress', 'animate-shoes', 'animate-accessories', 'animate-bags', 'product-clicked');
-            }, 700);
-        }
+            }, 800);
+        }, 300);
 
         // Render products with fade-in animation
         function renderProducts(productsToRender = products) {
             const grid = document.getElementById('productsGrid');
+            if (!grid) {
+                console.error('Error: #productsGrid element not found in DOM');
+                return;
+            }
+            if (!productsToRender || !Array.isArray(productsToRender) || productsToRender.length === 0) {
+                console.warn('No products to render:', productsToRender);
+                grid.innerHTML = '<p>No products available.</p>';
+                return;
+            }
+            console.log('Rendering products:', productsToRender.length, productsToRender);
             grid.innerHTML = '';
-
             productsToRender.forEach((product, index) => {
+                if (!product || !product.id || !product.name || !product.price || !product.category || !product.image) {
+                    console.warn('Invalid product at index', index, product);
+                    return;
+                }
+                if (!validCategories.includes(product.category)) {
+                    console.warn(`Invalid category '${product.category}' for product ID ${product.id}, defaulting to 'dress'`);
+                    product.category = 'dress';
+                }
                 const isInCart = cart.some(item => item.id === product.id);
                 const isInWishlist = wishlist.some(item => item.id === product.id);
-
                 const productCard = document.createElement('div');
                 productCard.className = 'product-card fade-in';
                 productCard.setAttribute('data-category', product.category);
                 productCard.style.transitionDelay = `${index * 50}ms`;
-                
                 productCard.innerHTML = `
                     <div class="product-image-container">
                         <img src="${product.image}" alt="${product.name}" class="product-image">
@@ -1458,7 +1464,6 @@
                             <button class="action-btn ${isInWishlist ? 'active' : ''}" onclick="handleWishlistClick(event, ${product.id})" title="Add to Wishlist">
                                 ${isInWishlist ? '♥' : '♡'}
                             </button>
-                            
                             <button class="view-details-btn" onclick="handleViewDetailsClick(event, ${product.id})" title="View Details">
                                 👁
                             </button>
@@ -1467,22 +1472,18 @@
                     <div class="product-info">
                         <h3 class="product-name">${product.name}</h3>
                         <div class="product-price">Rp ${product.price.toLocaleString()}</div>
-                        <p class="product-description">${product.description.substring(0, 40)}...</p>
+                        <p class="product-description">${product.description ? product.description.substring(0, 40) + '...' : 'No description available'}</p>
                     </div>
                 `;
-                
-                // Add click event for product card animation
                 productCard.addEventListener('click', function(e) {
-                    // Don't animate if clicking on action buttons
                     if (!e.target.closest('.product-actions')) {
-                        animateProduct(this, product.category);
+                        requestAnimationFrame(() => {
+                            animateProduct(this, product.category);
+                        });
                     }
                 });
-                
                 grid.appendChild(productCard);
             });
-
-            // Trigger fade-in animations
             setTimeout(() => {
                 document.querySelectorAll('.product-card').forEach(card => {
                     card.classList.add('visible');
@@ -1494,12 +1495,14 @@
         function handleWishlistClick(event, productId) {
             event.stopPropagation();
             const product = products.find(p => p.id === productId);
+            if (!product) {
+                console.error(`Product with ID ${productId} not found`);
+                return;
+            }
             const productCard = event.target.closest('.product-card');
-            
-            // Animate the product
-            animateProduct(productCard, product.category);
-            
-            // Add to wishlist after a short delay
+            requestAnimationFrame(() => {
+                animateProduct(productCard, product.category);
+            });
             setTimeout(() => {
                 toggleWishlistItem(productId);
             }, 200);
@@ -1509,12 +1512,14 @@
         function handleViewDetailsClick(event, productId) {
             event.stopPropagation();
             const product = products.find(p => p.id === productId);
+            if (!product) {
+                console.error(`Product with ID ${productId} not found`);
+                return;
+            }
             const productCard = event.target.closest('.product-card');
-            
-            // Animate the product
-            animateProduct(productCard, product.category);
-            
-            // Show details after animation
+            requestAnimationFrame(() => {
+                animateProduct(productCard, product.category);
+            });
             setTimeout(() => {
                 viewProductDetails(productId);
             }, 400);
@@ -1523,9 +1528,12 @@
         // View product details with smooth animation
         function viewProductDetails(productId) {
             const product = products.find(p => p.id === productId);
+            if (!product) {
+                console.error(`Product with ID ${productId} not found`);
+                return;
+            }
             const isInCart = cart.some(item => item.id === product.id);
             const isInWishlist = wishlist.some(item => item.id === product.id);
-            
             const modalBody = document.getElementById('modalBody');
             modalBody.innerHTML = `
                 <div class="modal-image">
@@ -1542,13 +1550,12 @@
                         <button class="modal-btn" onclick="toggleCartItem(${product.id}); updateModalButtons(${product.id})">
                             ${isInCart ? 'Remove from Cart' : 'Add to Cart'}
                         </button>
-                       <a href="detail-produk${product.id}.html" class="modal-btn" style="margin-top: 10px; display: inline-block; text-align: center; text-decoration: none;">
+                        <a href="detail-produk${product.id}.html" class="modal-btn" style="margin-top: 10px; display: inline-block; text-align: center; text-decoration: none;">
                             View More Details
-                       </a>
+                        </a>
                     </div>
                 </div>
             `;
-            
             document.getElementById('productModal').classList.add('active');
         }
 
@@ -1563,7 +1570,6 @@
         function closeModal() {
             const modal = document.getElementById('productModal');
             modal.querySelector('.modal-content').style.transform = 'scale(0.95)';
-            
             setTimeout(() => {
                 modal.classList.remove('active');
                 setTimeout(() => {
@@ -1575,26 +1581,18 @@
         // Setup filters with smooth animation
         function setupFilters() {
             const filterBtns = document.querySelectorAll('.filter-btn');
-            
             filterBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
-                    // Don't do anything if already active
                     if (this.classList.contains('active')) return;
-                    
                     filterBtns.forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
-                    
                     const filter = this.getAttribute('data-filter');
                     currentFilter = filter;
-                    
-                    // Fade out current products
                     const productCards = document.querySelectorAll('.product-card');
                     productCards.forEach(card => {
                         card.style.opacity = '0';
                         card.style.transform = 'translateY(10px)';
                     });
-                    
-                    // Render new products after fade out
                     setTimeout(() => {
                         if (filter === 'all') {
                             renderProducts(products);
@@ -1610,8 +1608,11 @@
         // Toggle cart item with smooth animation
         function toggleCartItem(productId) {
             const product = products.find(p => p.id === productId);
+            if (!product) {
+                console.error(`Product with ID ${productId} not found`);
+                return;
+            }
             const existingIndex = cart.findIndex(item => item.id === productId);
-            
             if (existingIndex > -1) {
                 cart.splice(existingIndex, 1);
                 showNotification(`${product.name} removed from cart!`);
@@ -1619,11 +1620,9 @@
                 cart.push(product);
                 showNotification(`${product.name} added to cart!`);
             }
-            
             updateCartCount();
             renderCart();
             saveCartAndWishlist();
-            
             const currentProducts = currentFilter === 'all' ? products : products.filter(p => p.category === currentFilter);
             renderProducts(currentProducts);
         }
@@ -1631,8 +1630,11 @@
         // Toggle wishlist item with smooth animation
         function toggleWishlistItem(productId) {
             const product = products.find(p => p.id === productId);
+            if (!product) {
+                console.error(`Product with ID ${productId} not found`);
+                return;
+            }
             const existingIndex = wishlist.findIndex(item => item.id === productId);
-            
             if (existingIndex > -1) {
                 wishlist.splice(existingIndex, 1);
                 showNotification(`${product.name} removed from wishlist!`);
@@ -1640,11 +1642,9 @@
                 wishlist.push(product);
                 showNotification(`${product.name} added to wishlist!`);
             }
-            
             updateWishlistCount();
             renderWishlist();
             saveCartAndWishlist();
-            
             const currentProducts = currentFilter === 'all' ? products : products.filter(p => p.category === currentFilter);
             renderProducts(currentProducts);
         }
@@ -1653,7 +1653,6 @@
         function updateCartCount() {
             const countElement = document.getElementById('cartCount');
             countElement.textContent = cart.length;
-            
             if (cart.length > 0) {
                 countElement.classList.add('show');
             } else {
@@ -1665,7 +1664,6 @@
         function updateWishlistCount() {
             const countElement = document.getElementById('wishlistCount');
             countElement.textContent = wishlist.length;
-            
             if (wishlist.length > 0) {
                 countElement.classList.add('show');
             } else {
@@ -1676,7 +1674,6 @@
         // Render cart with smooth animation
         function renderCart() {
             const cartContent = document.getElementById('cartContent');
-            
             if (cart.length === 0) {
                 cartContent.innerHTML = `
                     <div class="panel-empty">
@@ -1686,10 +1683,8 @@
                 `;
                 return;
             }
-            
             let cartHTML = '';
             let total = 0;
-            
             cart.forEach(item => {
                 total += item.price;
                 cartHTML += `
@@ -1703,8 +1698,7 @@
                     </div>
                 `;
             });
-            
-           cartHTML += `
+            cartHTML += `
                 <div style="padding: 15px; border-top: 1px solid #f0f0f0; margin-top: 15px; text-align: center;">
                     <div style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">
                         Total: Rp ${total.toLocaleString()}
@@ -1714,14 +1708,12 @@
                     </button>
                 </div>
             `;
-            
             cartContent.innerHTML = cartHTML;
         }
 
         // Render wishlist with smooth animation
         function renderWishlist() {
             const wishlistContent = document.getElementById('wishlistContent');
-            
             if (wishlist.length === 0) {
                 wishlistContent.innerHTML = `
                     <div class="panel-empty">
@@ -1731,9 +1723,7 @@
                 `;
                 return;
             }
-            
             let wishlistHTML = '';
-            
             wishlist.forEach(item => {
                 wishlistHTML += `
                     <div class="panel-item">
@@ -1746,13 +1736,11 @@
                     </div>
                 `;
             });
-            
             wishlistHTML += `
                 <a href="wishlist.html" style="display: inline-block; padding: 10px 16px; background: #000; color: #fff; text-decoration: none; border-radius: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-top: 15px; text-align: center; width: 100%; transition: all 0.3s ease;">
                     View Wishlist
                 </a>
             `;
-            
             wishlistContent.innerHTML = wishlistHTML;
         }
 
@@ -1760,7 +1748,6 @@
         function toggleCart() {
             const cartPanel = document.getElementById('cartPanel');
             const wishlistPanel = document.getElementById('wishlistPanel');
-            
             wishlistPanel.classList.remove('active');
             cartPanel.classList.toggle('active');
             renderCart();
@@ -1770,7 +1757,6 @@
         function toggleWishlist() {
             const wishlistPanel = document.getElementById('wishlistPanel');
             const cartPanel = document.getElementById('cartPanel');
-            
             cartPanel.classList.remove('active');
             wishlistPanel.classList.toggle('active');
             renderWishlist();
@@ -1780,10 +1766,8 @@
         function toggleMenu() {
             const hamburger = document.querySelector('.hamburger');
             const sidebar = document.getElementById('sidebar');
-
             hamburger.classList.toggle('active');
             sidebar.classList.toggle('active');
-
             const spans = hamburger.querySelectorAll('span');
             if (hamburger.classList.contains('active')) {
                 spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
@@ -1801,7 +1785,6 @@
             const notification = document.getElementById('notification');
             notification.textContent = message;
             notification.classList.add('show');
-            
             setTimeout(() => {
                 notification.classList.remove('show');
             }, 2500);
@@ -1817,12 +1800,10 @@
         function loadCartAndWishlist() {
             const savedCart = localStorage.getItem('kaira_cart');
             const savedWishlist = localStorage.getItem('kaira_wishlist');
-            
             if (savedCart) {
                 cart = JSON.parse(savedCart);
                 updateCartCount();
             }
-            
             if (savedWishlist) {
                 wishlist = JSON.parse(savedWishlist);
                 updateWishlistCount();
@@ -1832,14 +1813,11 @@
         // Search functionality with smooth animation
         document.getElementById('searchInput').addEventListener('input', function(e) {
             const searchTerm = e.target.value.toLowerCase();
-            
-            // Fade out current products
             const productCards = document.querySelectorAll('.product-card');
             productCards.forEach(card => {
                 card.style.opacity = '0';
                 card.style.transform = 'translateY(10px)';
             });
-            
             setTimeout(() => {
                 if (searchTerm.length > 0) {
                     const filteredProducts = products.filter(product => 
@@ -1861,18 +1839,14 @@
                 showNotification('Your cart is empty!');
                 return;
             }
-            
             const total = cart.reduce((sum, item) => sum + item.price, 0);
             showNotification(`Checkout successful! Total: Rp ${total.toLocaleString()}`);
-            
             cart = [];
             updateCartCount();
             renderCart();
             saveCartAndWishlist();
-            
             const currentProducts = currentFilter === 'all' ? products : products.filter(p => p.category === currentFilter);
             renderProducts(currentProducts);
-            
             document.getElementById('cartPanel').classList.remove('active');
         }
 
@@ -1898,19 +1872,15 @@
             const wishlistIcon = document.querySelector('.wishlist-icon');
             const sidebar = document.getElementById('sidebar');
             const hamburger = document.querySelector('.hamburger');
-            
             if (!cartPanel.contains(e.target) && !cartIcon.contains(e.target)) {
                 cartPanel.classList.remove('active');
             }
-            
             if (!wishlistPanel.contains(e.target) && !wishlistIcon.contains(e.target)) {
                 wishlistPanel.classList.remove('active');
             }
-            
             if (e.target === productModal) {
                 closeModal();
             }
-            
             if (!sidebar.contains(e.target) && !hamburger.contains(e.target) && sidebar.classList.contains('active')) {
                 toggleMenu();
             }
@@ -1927,102 +1897,28 @@
                 }
             }
         });
+
+        // Periodic product update check
         setInterval(() => {
-    const savedProducts = localStorage.getItem('kaira_products');
-    if (savedProducts) {
-        const newProducts = JSON.parse(savedProducts).filter(p => p.status === 'active').map(product => ({
-            ...product,
-            image: product.image.replace('w=100&h=100', 'w=300&h=300')
-        }));
-        if (JSON.stringify(newProducts) !== JSON.stringify(products)) {
-            products = newProducts;
-            const validProductIds = products.map(p => p.id);
-            cart = cart.filter(item => validProductIds.includes(item.id));
-            wishlist = wishlist.filter(item => validProductIds.includes(item.id));
-            saveCartAndWishlist();
-            const currentProducts = currentFilter === 'all' ? products : products.filter(p => p.category === currentFilter);
-            renderProducts(currentProducts);
-            showNotification('Product list updated!');
-        }
-    }
-}, 30000);
-const validProductIds = products.map(p => p.id);
-cart = cart.filter(item => validProductIds.includes(item.id));
-wishlist = wishlist.filter(item => validProductIds.includes(item.id));
-saveCartAndWishlist();
-
-
-function renderProducts(productsToRender = products) {
-    const grid = document.getElementById('productsGrid');
-    
-    // Check if grid exists
-    if (!grid) {
-        console.error('Error: #productsGrid element not found in DOM');
-        return;
-    }
-
-    // Check if productsToRender is valid
-    if (!productsToRender || !Array.isArray(productsToRender) || productsToRender.length === 0) {
-        console.warn('No products to render:', productsToRender);
-        grid.innerHTML = '<p>No products available.</p>'; // Display fallback message
-        return;
-    }
-
-    console.log('Rendering products:', productsToRender.length, productsToRender); // Debug
-    grid.innerHTML = ''; // Clear existing content
-
-    productsToRender.forEach((product, index) => {
-        // Validate product object
-        if (!product || !product.id || !product.name || !product.price || !product.category || !product.image) {
-            console.warn('Invalid product at index', index, product);
-            return; // Skip invalid product
-        }
-
-        const isInCart = cart.some(item => item.id === product.id);
-        const isInWishlist = wishlist.some(item => item.id === product.id);
-
-        const productCard = document.createElement('div');
-        productCard.className = 'product-card fade-in';
-        productCard.setAttribute('data-category', product.category);
-        productCard.style.transitionDelay = `${index * 50}ms`;
-        
-        productCard.innerHTML = `
-            <div class="product-image-container">
-                <img src="${product.image}" alt="${product.name}" class="product-image">
-                <div class="product-actions">
-                    <button class="action-btn ${isInWishlist ? 'active' : ''}" onclick="handleWishlistClick(event, ${product.id})" title="Add to Wishlist">
-                        ${isInWishlist ? '♥' : '♡'}
-                    </button>
-                    <button class="view-details-btn" onclick="handleViewDetailsClick(event, ${product.id})" title="View Details">
-                        👁
-                    </button>
-                </div>
-            </div>
-            <div class="product-info">
-                <h3 class="product-name">${product.name}</h3>
-                <div class="product-price">Rp ${product.price.toLocaleString()}</div>
-                <p class="product-description">${product.description ? product.description.substring(0, 40) + '...' : 'No description available'}</p>
-            </div>
-        `;
-        
-        // Add click event for product card animation
-        productCard.addEventListener('click', function(e) {
-            if (!e.target.closest('.product-actions')) {
-                animateProduct(this, product.category);
+            const savedProducts = localStorage.getItem('kaira_products');
+            if (savedProducts) {
+                const newProducts = JSON.parse(savedProducts).filter(p => p.status === 'active').map(product => ({
+                    ...product,
+                    image: product.image,
+                    category: validCategories.includes(product.category) ? product.category : 'dress'
+                }));
+                if (JSON.stringify(newProducts) !== JSON.stringify(products)) {
+                    products = newProducts;
+                    const validProductIds = products.map(p => p.id);
+                    cart = cart.filter(item => validProductIds.includes(item.id));
+                    wishlist = wishlist.filter(item => validProductIds.includes(item.id));
+                    saveCartAndWishlist();
+                    const currentProducts = currentFilter === 'all' ? products : products.filter(p => p.category === currentFilter);
+                    renderProducts(currentProducts);
+                    showNotification('Product list updated!');
+                }
             }
-        });
-        
-        grid.appendChild(productCard);
-    });
-
-    // Trigger fade-in animations
-    setTimeout(() => {
-        document.querySelectorAll('.product-card').forEach(card => {
-            card.classList.add('visible');
-        });
-    }, 50);
-}
+        }, 30000);
     </script>
-    
 </body>
 </html>
