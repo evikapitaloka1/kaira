@@ -1340,25 +1340,43 @@
 
         // Initialize products
         function initializeProducts() {
+    let products = [];
     const savedProducts = localStorage.getItem('kaira_products');
+    console.log('savedProducts from localStorage:', savedProducts); // Debug
+
     if (savedProducts) {
-        products = JSON.parse(savedProducts);
-        console.log(`Loaded ${products.length} products from localStorage`);
+        try {
+            products = JSON.parse(savedProducts);
+            console.log(`Loaded ${products.length} products from localStorage`);
+        } catch (e) {
+            console.error('Error parsing localStorage products:', e);
+            products = sampleProducts; // Fallback to sampleProducts on error
+            localStorage.setItem('kaira_products', JSON.stringify(sampleProducts));
+        }
     } else {
-        products = [
-            // ... (original sample products)
-        ];
-        console.log('No products found in localStorage, using sample data');
+        products = sampleProducts; // Fallback to sampleProducts if localStorage is empty
+        console.log('No products in localStorage, using sampleProducts:', products);
+        localStorage.setItem('kaira_products', JSON.stringify(sampleProducts));
     }
-    products = products.filter(p => p.status === 'active').map(product => ({
-        ...product,
-        image: product.image.replace('w=100&h=100', 'w=300&h=300')
-    }));
+
+    // Filter products (handle missing status)
+    products = products
+        .filter(p => !p.status || p.status === 'active') // Include products without status
+        .map(product => ({
+            ...product,
+            image: product.image // Remove unnecessary replace since sampleProducts doesn't use w=100&h=100
+        }));
+
+    console.log('Filtered products:', products); // Debug
+
+    // Validate cart and wishlist
     const validProductIds = products.map(p => p.id);
     cart = cart.filter(item => validProductIds.includes(item.id));
     wishlist = wishlist.filter(item => validProductIds.includes(item.id));
     saveCartAndWishlist();
-    renderProducts();
+
+    // Render products and set up other functionality
+    renderProducts(products);
     setupFilters();
     loadCartAndWishlist();
     initIntersectionObserver();
@@ -1932,6 +1950,79 @@ const validProductIds = products.map(p => p.id);
 cart = cart.filter(item => validProductIds.includes(item.id));
 wishlist = wishlist.filter(item => validProductIds.includes(item.id));
 saveCartAndWishlist();
+
+
+function renderProducts(productsToRender = products) {
+    const grid = document.getElementById('productsGrid');
+    
+    // Check if grid exists
+    if (!grid) {
+        console.error('Error: #productsGrid element not found in DOM');
+        return;
+    }
+
+    // Check if productsToRender is valid
+    if (!productsToRender || !Array.isArray(productsToRender) || productsToRender.length === 0) {
+        console.warn('No products to render:', productsToRender);
+        grid.innerHTML = '<p>No products available.</p>'; // Display fallback message
+        return;
+    }
+
+    console.log('Rendering products:', productsToRender.length, productsToRender); // Debug
+    grid.innerHTML = ''; // Clear existing content
+
+    productsToRender.forEach((product, index) => {
+        // Validate product object
+        if (!product || !product.id || !product.name || !product.price || !product.category || !product.image) {
+            console.warn('Invalid product at index', index, product);
+            return; // Skip invalid product
+        }
+
+        const isInCart = cart.some(item => item.id === product.id);
+        const isInWishlist = wishlist.some(item => item.id === product.id);
+
+        const productCard = document.createElement('div');
+        productCard.className = 'product-card fade-in';
+        productCard.setAttribute('data-category', product.category);
+        productCard.style.transitionDelay = `${index * 50}ms`;
+        
+        productCard.innerHTML = `
+            <div class="product-image-container">
+                <img src="${product.image}" alt="${product.name}" class="product-image">
+                <div class="product-actions">
+                    <button class="action-btn ${isInWishlist ? 'active' : ''}" onclick="handleWishlistClick(event, ${product.id})" title="Add to Wishlist">
+                        ${isInWishlist ? '♥' : '♡'}
+                    </button>
+                    <button class="view-details-btn" onclick="handleViewDetailsClick(event, ${product.id})" title="View Details">
+                        👁
+                    </button>
+                </div>
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">${product.name}</h3>
+                <div class="product-price">Rp ${product.price.toLocaleString()}</div>
+                <p class="product-description">${product.description ? product.description.substring(0, 40) + '...' : 'No description available'}</p>
+            </div>
+        `;
+        
+        // Add click event for product card animation
+        productCard.addEventListener('click', function(e) {
+            if (!e.target.closest('.product-actions')) {
+                animateProduct(this, product.category);
+            }
+        });
+        
+        grid.appendChild(productCard);
+    });
+
+    // Trigger fade-in animations
+    setTimeout(() => {
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.classList.add('visible');
+        });
+    }, 50);
+}
     </script>
+    
 </body>
 </html>
