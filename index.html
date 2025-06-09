@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <title>KAIRA</title>
-    <style>
+   <style>
         @font-face {
             font-family: 'KAIRAFont';
             src: url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
@@ -230,6 +230,7 @@
             display: flex;
             align-items: center;
             gap: 5px;
+            margin-right: 16px;
         }
 
         .wishlist-icon:hover {
@@ -784,7 +785,7 @@
             text-transform: uppercase;
         }
 
-        /* COMPLETELY REDESIGNED PRODUCT SECTION */
+        /* PRODUCT SECTION - Optimized for single product per slide on mobile */
         .product-section {
             margin: 60px 0;
             padding: 0 15px;
@@ -835,14 +836,15 @@
             overflow: hidden;
             border-radius: 12px;
             background: #fafafa;
-            padding: 30px 20px;
+            padding: 30px 0;
         }
 
         .product-grid {
             display: flex;
             transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            gap: 25px;
+            gap: 15px;
             align-items: stretch;
+            width: max-content;
         }
 
         .product-card {
@@ -1053,11 +1055,11 @@
         }
 
         .product-nav-btn.prev {
-            left: -25px;
+            left: 10px;
         }
 
         .product-nav-btn.next {
-            right: -25px;
+            right: 10px;
         }
 
         /* Product Indicators */
@@ -1065,7 +1067,7 @@
             display: flex;
             justify-content: center;
             gap: 8px;
-            margin-top: 30px;
+            margin-top: 20px;
         }
 
         .product-indicator {
@@ -1115,7 +1117,7 @@
             }
 
             .product-slider-wrapper {
-                padding: 20px 15px;
+                padding: 20px 0;
             }
 
             .product-card {
@@ -1133,11 +1135,11 @@
             }
 
             .product-nav-btn.prev {
-                left: -20px;
+                left: 5px;
             }
 
             .product-nav-btn.next {
-                right: -20px;
+                right: 5px;
             }
 
             .city-section {
@@ -1178,18 +1180,21 @@
             }
 
             .product-slider-wrapper {
-                padding: 15px 10px;
+                padding: 15px 0;
+                overflow: hidden;
                 background: transparent;
             }
 
             .product-grid {
-                gap: 15px;
-                justify-content: center;
+                gap: 0;
+                justify-content: flex-start;
+                width: calc(100% * 6); /* 6 products */
             }
 
             .product-card {
                 width: 100%;
                 max-width: 300px;
+                flex: 0 0 100%;
                 margin: 0 auto;
             }
 
@@ -1227,11 +1232,11 @@
             }
 
             .product-nav-btn.prev {
-                left: -17px;
+                left: 5px;
             }
 
             .product-nav-btn.next {
-                right: -17px;
+                right: 5px;
             }
 
             .nav-arrow {
@@ -1665,96 +1670,76 @@
                 margin: 30px 0;
             }
         }
+
         .mobile-register-btn {
-  display: block;
-  padding: 12px 20px;
-  background-color: #222;
-  color: #fff;
-  text-align: center;
-  text-decoration: none;
-  border-radius: 8px;
-  font-size: 16px;
-  margin-top: 10px;
-}
+            display: block;
+            padding: 12px 20px;
+            background-color: #222;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
 
-/* Sembunyikan di desktop */
-@media (min-width: 769px) {
-  .mobile-register-btn {
-    display: none;
-  }
-}
-/* Default: hide on larger screens */
-#mobile-wishlist-icon {
-  display: none;
-}
+        /* Sembunyikan di desktop */
+        @media (min-width: 769px) {
+            .mobile-register-btn {
+                display: none;
+            }
+        }
 
-/* Show only on screens up to 767px wide (mobile) */
-@media (max-width: 767px) {
-  #mobile-wishlist-icon {
-    display: inline;
-  }
-}
-/* Default: hide on larger screens */
-#mobile-wishlist-icon {
-    display: none;
-}
+        /* Default: hide on larger screens */
+        #mobile-wishlist-icon {
+            display: none;
+        }
 
-/* Show only on screens up to 767px wide (mobile) */
-@media (max-width: 767px) {
-    #mobile-wishlist-icon {
-        display: flex;
-        align-items: center;
-        margin-left: 10px; /* Space from logo */
-    }
+        /* Show only on screens up to 767px wide (mobile) */
+        @media (max-width: 767px) {
+            #mobile-wishlist-icon {
+                display: flex;
+                align-items: center;
+                margin-left: 10px;
+            }
 
-    /* Adjust header layout for mobile */
-    .left-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-grow: 1;
-    }
+            .left-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-grow: 1;
+            }
 
-    /* Ensure the mobile wishlist icon aligns with other elements */
-    .mobile-wishlist-icon {
-        position: relative;
-        padding: 6px;
-    }
+            .mobile-wishlist-icon {
+                position: relative;
+                padding: 6px;
+            }
 
-    .mobile-wishlist-icon .wishlist-count {
-        top: -4px;
-        right: -4px;
-        width: 14px;
-        height: 14px;
-        font-size: 8px;
-    }
+            .mobile-wishlist-icon .wishlist-count {
+                top: -4px;
+                right: -4px;
+                width: 14px;
+                height: 14px;
+                font-size: 8px;
+            }
 
-    /* Adjust logo size to prevent overlap */
-    .logo {
-        font-size: clamp(24px, 5vw, 40px);
-        margin-left: 8px;
-    }
+            .logo {
+                font-size: clamp(24px, 5vw, 40px);
+                margin-left: 8px;
+            }
 
-    /* Ensure mobile-register-btn doesn’t overlap */
-    .mobile-register-btn {
-        margin-left: auto;
-        padding: 8px 16px;
-        font-size: 14px;
-    }
-}
-/* Tambahkan jarak setelah wishlist */
-.wishlist-icon {
-  margin-right: 16px; /* atau sesuaikan px-nya */
-}
+            .mobile-register-btn {
+                margin-left: auto;
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
 
-/* Jika digunakan flex container di menu */
-.header-controls {
-  display: flex;
-  align-items: center;
-  gap: 16px; /* jarak antar semua item di dalamnya */
-}
-
-
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
     </style>
 </head>
 <body>
@@ -1776,34 +1761,34 @@
         <div class="spinner"></div>
     </div>
 
-<header class="header">
-    <div class="left-header">
-        <div class="hamburger" id="hamburger" onclick="toggleMenu()">
-            <span></span>
-            <span></span>
-            <span></span>
+    <header class="header">
+        <div class="left-header">
+            <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="logo">KAIRA</div>
+            <!-- Mobile Wishlist Icon -->
+            <div class="wishlist-icon mobile-wishlist-icon" id="mobile-wishlist-icon" onclick="toggleWishlist()" title="Wishlist">
+                <span style="font-size: 18px;">♡</span>
+                <div class="wishlist-count" id="wishlistCountMobile">0</div>
+            </div>
         </div>
-        <div class="logo">KAIRA</div>
-        <!-- Mobile Wishlist Icon -->
-        <div class="wishlist-icon mobile-wishlist-icon" id="mobile-wishlist-icon" onclick="toggleWishlist()" title="Wishlist">
-            <span style="font-size: 18px;">♡</span>
-            <div class="wishlist-count" id="wishlistCountMobile">0</div>
-        </div>
-    </div>
-    <nav class="nav-links">
-        <div class="search-box">
-            <input type="text" placeholder="CARI" aria-label="Search">
-        </div>
-        <a href="register.html" onclick="showLogin()">LOG IN</a>
+        <nav class="nav-links">
+            <div class="search-box">
+                <input type="text" placeholder="CARI" aria-label="Search">
+            </div>
+            <a href="register.html" onclick="showLogin()">LOG IN</a>
 
-        <!-- Desktop Wishlist Icon -->
-        <div class="wishlist-icon" onclick="toggleWishlist()" title="Wishlist">
-            <span style="font-size: 18px;">♡</span>
-            <div class="wishlist-count" id="wishlistCount">0</div>
-        </div>
-    </nav>
-    <a href="register.html" class="mobile-register-btn">LOGIN</a>
-</header>
+            <!-- Desktop Wishlist Icon -->
+            <div class="wishlist-icon" onclick="toggleWishlist()" title="Wishlist">
+                <span style="font-size: 18px;">♡</span>
+                <div class="wishlist-count" id="wishlistCount">0</div>
+            </div>
+        </nav>
+        <a href="register.html" class="mobile-register-btn">LOGIN</a>
+    </header>
 
     <!-- Sidebar Menu -->
     <nav class="sidebar" id="sidebar">
@@ -1884,7 +1869,7 @@
             </div>
         </section>
 
-        <!-- COMPLETELY REDESIGNED PRODUCT SECTION -->
+        <!-- PRODUCT SECTION - MOBILE OPTIMIZED -->
         <section class="product-section" id="products">
             <div class="product-section-header">
                 <div class="section-header">
@@ -1913,9 +1898,8 @@
                                     <span class="original-price">Rp 500.000</span>
                                 </div>
                                 <div class="product-actions">
-                                <button class="btn-primary" onclick="addToWishlistFromCard(1)">ADD TO LOVE</button>
+                                    <button class="btn-primary" onclick="addToWishlistFromCard(1)">ADD TO LOVE</button>
                                     <button class="btn-secondary" onclick="viewProduct(this)" data-id="1">VIEW</button>
-
                                 </div>
                             </div>
                         </div>
@@ -1940,7 +1924,6 @@
                                 <div class="product-actions">
                                     <button class="btn-primary" onclick="addToWishlistFromCard(2)">ADD TO LOVE</button>
                                     <button class="btn-secondary" onclick="viewProduct(this)" data-id="2">VIEW</button>
-
                                 </div>
                             </div>
                         </div>
@@ -1964,7 +1947,6 @@
                                 <div class="product-actions">
                                     <button class="btn-primary" onclick="addToWishlistFromCard(3)">ADD TO LOVE</button>
                                     <button class="btn-secondary" onclick="viewProduct(this)" data-id="3">VIEW</button>
-
                                 </div>
                             </div>
                         </div>
@@ -1988,7 +1970,6 @@
                                 <div class="product-actions">
                                     <button class="btn-primary" onclick="addToWishlistFromCard(4)">ADD TO LOVE</button>
                                     <button class="btn-secondary" onclick="viewProduct(this)" data-id="4">VIEW</button>
-
                                 </div>
                             </div>
                         </div>
@@ -2012,7 +1993,6 @@
                                 <div class="product-actions">
                                     <button class="btn-primary" onclick="addToWishlistFromCard(5)">ADD TO LOVE</button>
                                     <button class="btn-secondary" onclick="viewProduct(this)" data-id="5">VIEW</button>
-
                                 </div>
                             </div>
                         </div>
@@ -2035,8 +2015,7 @@
                                 </div>
                                 <div class="product-actions">
                                     <button class="btn-primary" onclick="addToWishlistFromCard(6)">ADD TO LOVE</button>
-                                   <button class="btn-secondary" onclick="viewProduct(this)" data-id="6">VIEW</button>
-
+                                    <button class="btn-secondary" onclick="viewProduct(this)" data-id="6">VIEW</button>
                                 </div>
                             </div>
                         </div>
@@ -2052,79 +2031,78 @@
             </div>
         </section>
 
-<!-- Article Section -->
-<section class="article-section" id="articles">
-    <div class="anniversary-section-article">
-        <div class="section-header">
-            <div class="section-title">ARTICLE</div>
-        </div>
-
-        <div class="article-container">
-            <!-- Hero Article -->
-            <a href="#" onclick="goToArticle('1')" class="article-hero">
-                <img src="img/new/artikel3.jpg" alt="Summer Hat Feature" loading="lazy">
-                <div class="image-info">
-                    FEMININE EMBRACING THE DARK SIDE OF ELEGANCE
+        <!-- Article Section -->
+        <section class="article-section" id="articles">
+            <div class="anniversary-section-article">
+                <div class="section-header">
+                    <div class="section-title">ARTICLE</div>
                 </div>
-                <div class="image-info-sub">
-                    BY LINA GARCIA-FERRADO
+
+                <div class="article-container">
+                    <!-- Hero Article -->
+                    <a href="#" onclick="goToArticle('1')" class="article-hero">
+                        <img src="img/new/artikel3.jpg" alt="Summer Hat Feature" loading="lazy">
+                        <div class="image-info">
+                            FEMININE EMBRACING THE DARK SIDE OF ELEGANCE
+                        </div>
+                        <div class="image-info-sub">
+                            BY LINA GARCIA-FERRADO
+                        </div>
+                    </a>
+
+                    <!-- Other Articles -->
+                    <div class="article-list">
+                        <a href="#" onclick="goToArticle('2')" class="article-item">
+                            <img src="img/new/tas5.jpg" alt="Fashion Trends" loading="lazy">
+                            <div class="article-content">
+                                <h3>ICONIC RED-CARPET LOOKS STAR</h3>
+                                <p>BY MARGOT ROBBIE</p>
+                            </div>
+                        </a>
+
+                        <a href="#" onclick="goToArticle('3')" class="article-item">
+                            <img src="img/new/artikel.jpg" alt="Danielle" loading="lazy">
+                            <div class="article-content">
+                                <h3>DANIELLE LUXEMBOURG IN BERLIN</h3>
+                                <p>SUSTAINABLE FASHION</p>
+                            </div>
+                        </a>
+
+                        <a href="#" onclick="goToArticle('4')" class="article-item">
+                            <img src="img/new/artikel2.jpg" alt="EVERYTHING YOU NEED TO KNOW" loading="lazy">
+                            <div class="article-content">
+                                <h3>EVERYTHING YOU NEED TO KNOW</h3>
+                                <p>BY CHIRSTYA</p>
+                            </div>
+                        </a>
+
+                        <a href="#" onclick="goToArticle('5')" class="article-item">
+                            <img src="img/new/11.jpg" alt="TRENS RETRO" loading="lazy">
+                            <div class="article-content">
+                                <h3>TRENS RETRO</h3>
+                                <p>BY EMILY RATAJKOWSKI</p>
+                            </div>
+                        </a>
+
+                        <a href="#" onclick="goToArticle('6')" class="article-item">
+                            <img src="img/new/cicin.jpg" alt="TREND JEWELRY" loading="lazy">
+                            <div class="article-content">
+                                <h3>TREND JEWELRY</h3>
+                                <p>BY LARA SANCHEZ-PORTILLO</p>
+                            </div>
+                        </a>
+                    </div>
                 </div>
-            </a>
-
-            <!-- Other Articles -->
-            <div class="article-list">
-                <a href="#" onclick="goToArticle('2')" class="article-item">
-                    <img src="img/new/tas5.jpg" alt="Fashion Trends" loading="lazy">
-                    <div class="article-content">
-                        <h3>ICONIC RED-CARPET LOOKS STAR</h3>
-                        <p>BY MARGOT ROBBIE</p>
-                    </div>
-                </a>
-
-                <a href="#" onclick="goToArticle('3')" class="article-item">
-                    <img src="img/new/artikel.jpg" alt="Danielle" loading="lazy">
-                    <div class="article-content">
-                        <h3>DANIELLE LUXEMBOURG IN BERLIN</h3>
-                        <p>SUSTAINABLE FASHION</p>
-                    </div>
-                </a>
-
-                <a href="#" onclick="goToArticle('4')" class="article-item">
-                    <img src="img/new/artikel2.jpg" alt="EVERYTHING YOU NEED TO KNOW" loading="lazy">
-                    <div class="article-content">
-                        <h3>EVERYTHING YOU NEED TO KNOW</h3>
-                        <p>BY CHIRSTYA</p>
-                    </div>
-                </a>
-
-                <a href="#" onclick="goToArticle('5')" class="article-item">
-                    <img src="img/new/11.jpg" alt="TRENS RETRO" loading="lazy">
-                    <div class="article-content">
-                        <h3>TRENS RETRO</h3>
-                        <p>BY EMILY RATAJKOWSKI</p>
-                    </div>
-                </a>
-
-                <a href="#" onclick="goToArticle('6')" class="article-item">
-                    <img src="img/new/cicin.jpg" alt="TREND JEWELRY" loading="lazy">
-                    <div class="article-content">
-                        <h3>TREND JEWELRY</h3>
-                        <p>BY LARA SANCHEZ-PORTILLO</p>
-                    </div>
-                </a>
             </div>
-        </div>
-    </div>
-</section>  
+        </section>  
 
         <!-- Newsletter Section -->
         <section class="newsletter-section" id="newsletter">
             <div class="newsletter-container">
                 <h2 class="newsletter-title">STAY IN STYLE</h2>
                 <p class="newsletter-subtitle">
-  Stay updated with the latest fashion, trends, and exclusive deals—delivered right to your inbox!
-</p>
-
+                    Stay updated with the latest fashion, trends, and exclusive deals—delivered right to your inbox!
+                </p>
 
                 <form class="newsletter-form" onsubmit="subscribeNewsletter(event)">
                     <input 
@@ -2138,77 +2116,76 @@
                     <button type="submit" class="newsletter-btn">SUBSCRIBE</button>
                 </form>
                 <p class="newsletter-privacy">
-  BY SUBSCRIBING, YOU AGREE TO OUR PRIVACY POLICY. YOU CAN UNSUBSCRIBE AT ANY TIME.
-</p>
-
+                    BY SUBSCRIBING, YOU AGREE TO OUR PRIVACY POLICY. YOU CAN UNSUBSCRIBE AT ANY TIME.
+                </p>
             </div>
         </section>
     </main>
 
     <!-- Footer -->
-<footer class="footer" id="contact">
-    <div class="footer-container">
-        <div class="footer-logo">KAIRA</div>
-        <div class="footer-content">
-            <div class="footer-column">
-                <h4>CUSTOMER SERVICE</h4>
-                <ul>
-                    <li><a href="#" onclick="showContact()">CONTACT US</a></li>
-                    <li><a href="#" onclick="showStoreLocator()">STORE LOCATOR</a></li>
-                    <li><a href="#" onclick="showShipping()">SHIPPING INFO</a></li>
-                    <li><a href="#" onclick="showReturns()">RETURN POLICY</a></li>
-                    <li><a href="#" onclick="showSizeGuide()">SIZE GUIDE</a></li>
-                    <li><a href="#" onclick="showFAQ()">FAQ</a></li>
-                </ul>
+    <footer class="footer" id="contact">
+        <div class="footer-container">
+            <div class="footer-logo">KAIRA</div>
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h4>CUSTOMER SERVICE</h4>
+                    <ul>
+                        <li><a href="#" onclick="showContact()">CONTACT US</a></li>
+                        <li><a href="#" onclick="showStoreLocator()">STORE LOCATOR</a></li>
+                        <li><a href="#" onclick="showShipping()">SHIPPING INFO</a></li>
+                        <li><a href="#" onclick="showReturns()">RETURN POLICY</a></li>
+                        <li><a href="#" onclick="showSizeGuide()">SIZE GUIDE</a></li>
+                        <li><a href="#" onclick="showFAQ()">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>COMPANY</h4>
+                    <ul>
+                        <li><a href="#about">ABOUT US</a></li>
+                        <li><a href="#" onclick="showCareers()">CAREERS</a></li>
+                        <li><a href="#" onclick="showPress()">PRESS</a></li>
+                        <li><a href="#" onclick="showInvestors()">INVESTORS</a></li>
+                        <li><a href="#" onclick="showSustainability()">SUSTAINABILITY</a></li>
+                        <li><a href="#" onclick="showPartnership()">PARTNERSHIPS</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>COLLECTIONS</h4>
+                    <ul>
+                        <li><a href="#products">NEW ARRIVALS</a></li>
+                        <li><a href="#" onclick="showWomen()">WOMEN</a></li>
+                        <li><a href="#" onclick="showMen()">MEN</a></li>
+                        <li><a href="#" onclick="showAccessories()">ACCESSORIES</a></li>
+                        <li><a href="#" onclick="showSale()">SALE</a></li>
+                        <li><a href="#" onclick="showGiftCard()">GIFT CARDS</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>FOLLOW US</h4>
+                    <ul>
+                        <li><a href="#" onclick="openSocial('instagram')">INSTAGRAM</a></li>
+                        <li><a href="#" onclick="openSocial('facebook')">FACEBOOK</a></li>
+                        <li><a href="#" onclick="openSocial('twitter')">TWITTER</a></li>
+                        <li><a href="#" onclick="openSocial('pinterest')">PINTEREST</a></li>
+                        <li><a href="#" onclick="openSocial('youtube')">YOUTUBE</a></li>
+                        <li><a href="#" onclick="openSocial('tiktok')">TIKTOK</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>LEGAL</h4>
+                    <ul>
+                        <li><a href="#" onclick="showPrivacy()">PRIVACY POLICY</a></li>
+                        <li><a href="#" onclick="showTerms()">TERMS & CONDITIONS</a></li>
+                        <li><a href="#" onclick="showCookies()">COOKIE POLICY</a></li>
+                        <li><a href="#" onclick="showAccessibility()">ACCESSIBILITY</a></li>
+                    </ul>
+                </div>
             </div>
-            <div class="footer-column">
-                <h4>COMPANY</h4>
-                <ul>
-                    <li><a href="#about">ABOUT US</a></li>
-                    <li><a href="#" onclick="showCareers()">CAREERS</a></li>
-                    <li><a href="#" onclick="showPress()">PRESS</a></li>
-                    <li><a href="#" onclick="showInvestors()">INVESTORS</a></li>
-                    <li><a href="#" onclick="showSustainability()">SUSTAINABILITY</a></li>
-                    <li><a href="#" onclick="showPartnership()">PARTNERSHIPS</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h4>COLLECTIONS</h4>
-                <ul>
-                    <li><a href="#products">NEW ARRIVALS</a></li>
-                    <li><a href="#" onclick="showWomen()">WOMEN</a></li>
-                    <li><a href="#" onclick="showMen()">MEN</a></li>
-                    <li><a href="#" onclick="showAccessories()">ACCESSORIES</a></li>
-                    <li><a href="#" onclick="showSale()">SALE</a></li>
-                    <li><a href="#" onclick="showGiftCard()">GIFT CARDS</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h4>FOLLOW US</h4>
-                <ul>
-                    <li><a href="#" onclick="openSocial('instagram')">INSTAGRAM</a></li>
-                    <li><a href="#" onclick="openSocial('facebook')">FACEBOOK</a></li>
-                    <li><a href="#" onclick="openSocial('twitter')">TWITTER</a></li>
-                    <li><a href="#" onclick="openSocial('pinterest')">PINTEREST</a></li>
-                    <li><a href="#" onclick="openSocial('youtube')">YOUTUBE</a></li>
-                    <li><a href="#" onclick="openSocial('tiktok')">TIKTOK</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h4>LEGAL</h4>
-                <ul>
-                    <li><a href="#" onclick="showPrivacy()">PRIVACY POLICY</a></li>
-                    <li><a href="#" onclick="showTerms()">TERMS & CONDITIONS</a></li>
-                    <li><a href="#" onclick="showCookies()">COOKIE POLICY</a></li>
-                    <li><a href="#" onclick="showAccessibility()">ACCESSIBILITY</a></li>
-                </ul>
+            <div class="footer-bottom">
+                <p>© 2025 KAIRA. ALL RIGHTS RESERVED. | DESIGNED IN INDONESIA</p>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p>© 2025 KAIRA. ALL RIGHTS RESERVED. | DESIGNED IN INDONESIA</p>
-        </div>
-    </div>
-</footer>
+    </footer>
 
     <script>
         // Global variables
@@ -2320,7 +2297,12 @@
         // Update product slide position
         function updateProductSlidePosition() {
             const productGrid = document.getElementById('productGrid');
-            const cardWidth = 280 + 25; // card width + gap
+            const cardWidth = window.innerWidth <= 480 ? 
+                (window.innerWidth - 40) : // Full width minus padding on mobile
+                (window.innerWidth <= 768 ? 
+                    (window.innerWidth / 2 - 20) : // Half width on tablet
+                    295); // Fixed width on desktop
+            
             const translateX = -(productCurrentSlide * cardWidth * productItemsPerView);
             productGrid.style.transform = `translateX(${translateX}px)`;
             updateActiveIndicator();
@@ -2417,20 +2399,20 @@
         }
 
         function updateWishlistCount() {
-    const countElement = document.getElementById('wishlistCount');
-    const mobileCountElement = document.getElementById('wishlistCountMobile');
-    
-    countElement.textContent = wishlistItems.length;
-    mobileCountElement.textContent = wishlistItems.length;
-    
-    if (wishlistItems.length > 0) {
-        countElement.classList.add('show');
-        mobileCountElement.classList.add('show');
-    } else {
-        countElement.classList.remove('show');
-        mobileCountElement.classList.remove('show');
-    }
-}
+            const countElement = document.getElementById('wishlistCount');
+            const mobileCountElement = document.getElementById('wishlistCountMobile');
+            
+            countElement.textContent = wishlistItems.length;
+            mobileCountElement.textContent = wishlistItems.length;
+            
+            if (wishlistItems.length > 0) {
+                countElement.classList.add('show');
+                mobileCountElement.classList.add('show');
+            } else {
+                countElement.classList.remove('show');
+                mobileCountElement.classList.remove('show');
+            }
+        }
 
         function updateWishlistPanel() {
             const wishlistContent = document.getElementById('wishlistContent');
@@ -2777,7 +2759,7 @@
         function openSocial(platform) { 
             const socialLinks = {
                 instagram: 'https://instagram.com/kaira_official',
-                facebook: 'https://facebook.com/kaira.official',
+                facebook: 'https://facebook.com/kaira_official',
                 twitter: 'https://twitter.com/kaira_official',
                 pinterest: 'https://pinterest.com/kaira_official',
                 youtube: 'https://youtube.com/kaira_official',
@@ -2868,7 +2850,7 @@
             });
         });
 
-        console.log('KAIRA Fashion Website with Wishlist Panel loaded successfully! 🎉');
+        console.log('KAIRA Fashion Website with Mobile Optimized Product Section loaded successfully! 🎉');
     </script>
 </body>
 </html>
