@@ -260,6 +260,13 @@
             transform: scale(1);
         }
 
+        /* Mobile Icons Container */
+        .mobile-icons {
+            display: none;
+            gap: 10px;
+            align-items: center;
+        }
+
         /* Cart Panel Styles */
         .cart-panel {
             position: fixed;
@@ -1189,8 +1196,13 @@
                 font-size: 24px;
             }
 
+            /* Hide desktop nav links but show mobile icons */
             .nav-links {
                 display: none;
+            }
+
+            .mobile-icons {
+                display: flex;
             }
 
             .main-content {
@@ -1380,6 +1392,8 @@
             </div>
             <div class="logo" onclick="goHome()">KAIRA</div>
         </div>
+        
+        <!-- Desktop Navigation -->
         <nav class="nav-links">
             <div class="search-box">
                 <input type="text" placeholder="Search" id="searchInput">
@@ -1388,7 +1402,7 @@
             <a href="#" onclick="showHelp()"></a>
             
             <div class="wishlist-icon" onclick="toggleWishlist()">
-                <span style="font-size: 14px;">♡</span>
+                <span style="font-size: 14px;"></span>
                 <div class="wishlist-count" id="wishlistCount">0</div>
             </div>
             
@@ -1397,6 +1411,19 @@
                 <div class="cart-count" id="cartCount">0</div>
             </div>
         </nav>
+
+        <!-- Mobile Icons -->
+        <div class="mobile-icons">
+            <div class="wishlist-icon" onclick="toggleWishlist()">
+                <span style="font-size: 16px;">♡</span>
+                <div class="wishlist-count" id="wishlistCountMobile">0</div>
+            </div>
+            
+            <div class="cart-icon" onclick="toggleCart()">
+                <span style="font-size: 16px;">🛒</span>
+                <div class="cart-count" id="cartCountMobile">0</div>
+            </div>
+        </div>
     </header>
 
     <!-- Sidebar Menu -->
@@ -2173,24 +2200,34 @@
         // Cart and wishlist functions
         function updateCartCount() {
             const countElement = document.getElementById('cartCount');
+            const countElementMobile = document.getElementById('cartCountMobile');
             const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            
             countElement.textContent = totalItems;
+            countElementMobile.textContent = totalItems;
             
             if (totalItems > 0) {
                 countElement.classList.add('show');
+                countElementMobile.classList.add('show');
             } else {
                 countElement.classList.remove('show');
+                countElementMobile.classList.remove('show');
             }
         }
 
         function updateWishlistCount() {
             const countElement = document.getElementById('wishlistCount');
+            const countElementMobile = document.getElementById('wishlistCountMobile');
+            
             countElement.textContent = wishlist.length;
+            countElementMobile.textContent = wishlist.length;
             
             if (wishlist.length > 0) {
                 countElement.classList.add('show');
+                countElementMobile.classList.add('show');
             } else {
                 countElement.classList.remove('show');
+                countElementMobile.classList.remove('show');
             }
         }
 

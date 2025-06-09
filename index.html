@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <title>KAIRA</title>
-    <style>
+  <style>
         @font-face {
             font-family: 'KAIRAFont';
             src: url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
@@ -230,6 +230,7 @@
             display: flex;
             align-items: center;
             gap: 5px;
+            margin-right: 16px;
         }
 
         .wishlist-icon:hover {
@@ -843,6 +844,7 @@
             transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             gap: 25px;
             align-items: stretch;
+            width: max-content;
         }
 
         .product-card {
@@ -1178,19 +1180,22 @@
             }
 
             .product-slider-wrapper {
-                padding: 15px 10px;
+                padding: 15px 0;
                 background: transparent;
+                overflow: visible;
             }
 
             .product-grid {
                 gap: 15px;
-                justify-content: center;
+                justify-content: flex-start;
+                width: 100%;
             }
 
             .product-card {
-                width: 100%;
+                width: calc(100% - 30px);
                 max-width: 300px;
                 margin: 0 auto;
+                flex: 0 0 calc(100% - 30px);
             }
 
             .product-image-container {
@@ -1227,11 +1232,11 @@
             }
 
             .product-nav-btn.prev {
-                left: -17px;
+                left: 5px;
             }
 
             .product-nav-btn.next {
-                right: -17px;
+                right: 5px;
             }
 
             .nav-arrow {
@@ -1665,96 +1670,76 @@
                 margin: 30px 0;
             }
         }
+
         .mobile-register-btn {
-  display: block;
-  padding: 12px 20px;
-  background-color: #222;
-  color: #fff;
-  text-align: center;
-  text-decoration: none;
-  border-radius: 8px;
-  font-size: 16px;
-  margin-top: 10px;
-}
+            display: block;
+            padding: 12px 20px;
+            background-color: #222;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
 
-/* Sembunyikan di desktop */
-@media (min-width: 769px) {
-  .mobile-register-btn {
-    display: none;
-  }
-}
-/* Default: hide on larger screens */
-#mobile-wishlist-icon {
-  display: none;
-}
+        /* Sembunyikan di desktop */
+        @media (min-width: 769px) {
+            .mobile-register-btn {
+                display: none;
+            }
+        }
 
-/* Show only on screens up to 767px wide (mobile) */
-@media (max-width: 767px) {
-  #mobile-wishlist-icon {
-    display: inline;
-  }
-}
-/* Default: hide on larger screens */
-#mobile-wishlist-icon {
-    display: none;
-}
+        /* Default: hide on larger screens */
+        #mobile-wishlist-icon {
+            display: none;
+        }
 
-/* Show only on screens up to 767px wide (mobile) */
-@media (max-width: 767px) {
-    #mobile-wishlist-icon {
-        display: flex;
-        align-items: center;
-        margin-left: 10px; /* Space from logo */
-    }
+        /* Show only on screens up to 767px wide (mobile) */
+        @media (max-width: 767px) {
+            #mobile-wishlist-icon {
+                display: flex;
+                align-items: center;
+                margin-left: 10px;
+            }
 
-    /* Adjust header layout for mobile */
-    .left-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-grow: 1;
-    }
+            .left-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-grow: 1;
+            }
 
-    /* Ensure the mobile wishlist icon aligns with other elements */
-    .mobile-wishlist-icon {
-        position: relative;
-        padding: 6px;
-    }
+            .mobile-wishlist-icon {
+                position: relative;
+                padding: 6px;
+            }
 
-    .mobile-wishlist-icon .wishlist-count {
-        top: -4px;
-        right: -4px;
-        width: 14px;
-        height: 14px;
-        font-size: 8px;
-    }
+            .mobile-wishlist-icon .wishlist-count {
+                top: -4px;
+                right: -4px;
+                width: 14px;
+                height: 14px;
+                font-size: 8px;
+            }
 
-    /* Adjust logo size to prevent overlap */
-    .logo {
-        font-size: clamp(24px, 5vw, 40px);
-        margin-left: 8px;
-    }
+            .logo {
+                font-size: clamp(24px, 5vw, 40px);
+                margin-left: 8px;
+            }
 
-    /* Ensure mobile-register-btn doesn’t overlap */
-    .mobile-register-btn {
-        margin-left: auto;
-        padding: 8px 16px;
-        font-size: 14px;
-    }
-}
-/* Tambahkan jarak setelah wishlist */
-.wishlist-icon {
-  margin-right: 16px; /* atau sesuaikan px-nya */
-}
+            .mobile-register-btn {
+                margin-left: auto;
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
 
-/* Jika digunakan flex container di menu */
-.header-controls {
-  display: flex;
-  align-items: center;
-  gap: 16px; /* jarak antar semua item di dalamnya */
-}
-
-
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
     </style>
 </head>
 <body>
