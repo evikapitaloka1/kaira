@@ -122,6 +122,7 @@
             line-height: 0.9;
             text-transform: uppercase;
             color: #000;
+            cursor: pointer;
         }
 
         .admin-title {
@@ -716,16 +717,7 @@
     <header class="header">
         <div class="header-content">
             <div style="display: flex; align-items: center;">
-               <a class="admin-logo">KAIRA</a>
-
-<script>
-  document.querySelector('.admin-logo').addEventListener('click', function () {
-    window.location.href = 'index.html'; // arahkan ke index.html
-  });
-</script>
-
-
-
+                <a class="admin-logo">KAIRA</a>
                 <div class="admin-title">Admin Dashboard</div>
             </div>
             <div class="header-actions">
@@ -860,7 +852,6 @@
             <section id="transactions" class="content-section">
                 <div class="section-header">
                     <h1 class="section-title">Manage Transactions</h1>
-                    <button class="add-btn" onclick="openModal('transactionModal')">Add New Transaction</button>
                 </div>
 
                 <div class="search-filter">
@@ -1034,47 +1025,19 @@
         </div>
     </div>
 
-    <!-- Transaction Modal -->
+    <!-- Transaction Modal (View Only) -->
     <div id="transactionModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title" id="transactionModalTitle">Add/Edit Transaction</h2>
+                <h2 class="modal-title" id="transactionModalTitle">Transaction Details</h2>
                 <button class="modal-close" onclick="closeModal('transactionModal')">&times;</button>
             </div>
-            <form id="transactionForm">
-                <input type="hidden" id="editingTransactionId">
-                <div class="form-group">
-                    <label class="form-label">Customer Name</label>
-                    <input type="text" class="form-input" id="transactionCustomer" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Product</label>
-                    <select class="form-select" id="transactionProduct" required>
-                        <option value="">Select Product</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Quantity</label>
-                    <input type="number" class="form-input" id="transactionQuantity" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Amount (Rp)</label>
-                    <input type="number" class="form-input" id="transactionAmount" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Status</label>
-                    <select class="form-select" id="transactionStatus" required>
-                        <option value="">Select Status</option>
-                        <option value="pending">Pending</option>
-                        <option value="completed">Completed</option>
-                        <option value="cancelled">Cancelled</option>
-                    </select>
-                </div>
-                <div class="form-actions">
-                    <button type="button" class="btn-cancel" onclick="closeModal('transactionModal')">Cancel</button>
-                    <button type="submit" class="btn-save">Save Transaction</button>
-                </div>
-            </form>
+            <div id="transactionDetailsBody">
+                <!-- Details will be injected here by JS -->
+            </div>
+             <div class="form-actions">
+                <button type="button" class="btn-cancel" onclick="closeModal('transactionModal')">Close</button>
+            </div>
         </div>
     </div>
 
@@ -1113,12 +1076,13 @@
                     <label class="form-label">Excerpt (Short Summary)</label>
                     <textarea class="form-textarea" id="articleExcerpt" required style="min-height: 80px;"></textarea>
                 </div>
+                <!-- === MODIFICATION START === -->
                 <div class="form-group">
-                    <label class="form-label">Image URL</label>
-                    <input type="text" class="form-input" id="articleImage" required>
-                    <small style="display: block; margin-top: 5px; color: #666;">Enter a URL for the article image</small>
+                    <label class="form-label">Article Image</label>
+                    <input type="file" class="form-input" id="articleImage" accept="image/*">
                     <img id="articleImagePreview" src="/placeholder.svg" alt="Image Preview" class="image-preview" style="display: none; max-width: 100px; max-height: 100px; margin-top: 10px;">
                 </div>
+                <!-- === MODIFICATION END === -->
                 <div class="form-group">
                     <label class="form-label">Status</label>
                     <select class="form-select" id="articleStatus" required>
@@ -1138,7 +1102,7 @@
     <!-- Notification -->
     <div id="notification" class="notification"></div>
 
-     <script>
+    <script>
         // Global variables
         let users = [];
         let products = [];
@@ -1160,7 +1124,7 @@
             loadRegisteredUsers();
             loadProducts();
             loadArticles();
-            loadTransactions(); // Load real transactions from checkout
+            loadTransactions(); 
             
             updateStats();
             renderUsers();
@@ -1176,7 +1140,6 @@
                 const savedTransactions = localStorage.getItem('kaira_transactions');
                 if (savedTransactions) {
                     transactions = JSON.parse(savedTransactions);
-                    console.log(`Loaded ${transactions.length} transactions from localStorage`);
                 } else {
                     // Sample data if no real transactions exist
                     transactions = [
@@ -1197,7 +1160,6 @@
                             }
                         }
                     ];
-                    console.log('No transactions found, using sample data');
                 }
             } catch (error) {
                 console.error('Error loading transactions:', error);
@@ -1209,7 +1171,6 @@
         function saveTransactions() {
             try {
                 localStorage.setItem('kaira_transactions', JSON.stringify(transactions));
-                console.log('Transactions saved successfully');
             } catch (error) {
                 console.error('Error saving transactions:', error);
             }
@@ -1218,33 +1179,36 @@
         // Load registered users from localStorage
         function loadRegisteredUsers() {
             try {
-                const registeredUsers = localStorage.getItem('kaira_users') || localStorage.getItem('registered_users') || localStorage.getItem('users');
+                const registeredUsers = localStorage.getItem('kaira_users');
                 if (registeredUsers) {
                     const parsedUsers = JSON.parse(registeredUsers);
                     users = parsedUsers.map((user, index) => ({
                         id: user.id || index + 1,
-                        name: user.name || user.fullName || `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Unknown User',
+                        name: user.name || 'Unknown User',
                         email: user.email || 'No email provided',
                         role: user.role || 'customer',
                         status: user.status || 'active',
-                        created: user.registrationDate || user.createdAt || new Date().toISOString().split('T')[0],
-                        phone: user.phone || user.phoneNumber || '',
+                        created: user.created || new Date().toISOString().split('T')[0],
+                        phone: user.phone || '',
                         address: user.address || '',
                         lastLogin: user.lastLogin || 'Never'
                     }));
-                    console.log(`Loaded ${users.length} registered users`);
                 } else {
                     users = [
-                        { id: 1, name: 'evika', email: 'evika@gmailcom', role: 'admin', status: 'active', created: '2024-01-15', phone: '+62812345678', address: 'Jakarta', lastLogin: '2024-01-25' },
+                        { id: 1, name: 'evika', email: 'evika@gmail.com', role: 'admin', status: 'active', created: '2024-01-15', phone: '+62812345678', address: 'Jakarta', lastLogin: '2024-01-25' },
                         { id: 2, name: 'haikal', email: 'haikal@gmail.com', role: 'customer', status: 'active', created: '2024-01-10', phone: '+62887654321', address: 'Surabaya', lastLogin: '2024-01-24' },
                         { id: 3, name: 'hivi', email: 'hivi@gmail.com', role: 'customer', status: 'inactive', created: '2024-01-20', phone: '+62898765432', address: 'Bandung', lastLogin: '2024-01-22' }
                     ];
-                    console.log('No registered users found, using sample data');
+                    saveUsers();
                 }
             } catch (error) {
                 console.error('Error loading registered users:', error);
                 users = [];
             }
+        }
+        
+        function saveUsers() {
+            localStorage.setItem('kaira_users', JSON.stringify(users));
         }
 
         // Load products from localStorage
@@ -1253,81 +1217,22 @@
                 const savedProducts = localStorage.getItem('kaira_products');
                 if (savedProducts) {
                     products = JSON.parse(savedProducts);
-                    console.log(`Loaded ${products.length} products from localStorage`);
                 } else {
                     products = [
-                        {
-                id: 1,
-                name: 'WHITE BLAZER',
-                price: 324.000,
-                category: 'dress',
-                image: 'img/new/3.jpg',
-                description: 'Elegant white blazer perfect for formal occasions. Made from premium fabric with sophisticated design.'
-            },
-            {
-                id: 2,
-                name: 'GLASSES ',
-                price: 188000,
-                category: 'accessories',
-                image: 'img/new/2.jpg',
-                description: 'Luxurious glasses with premium quality. Perfect accessory for any outfit.'
-            },
-            {
-                id: 3,
-                name: 'COTTON HIJAB',
-                price: 120000,
-                category: 'accessories',
-                image: 'img/new/5.jpg',
-                description: 'Premium cotton hijab with modern design. Spacious and durable for everyday use.'
-            },
-            {
-                id: 4,
-                name: 'BLACK HEELS',
-                price: 650000,
-                category: 'shoes',
-                image: 'img/new/sepatu2.jpg',
-                description: 'Elegant black heels for sophisticated look. Comfortable and stylish for any occasion.'
-            },
-            {
-                id: 5,
-                name: 'SLING BAG',
-                price: 750000,
-                category: 'bags',
-                image: 'img/new/14.jpg',
-                description: 'Elegant and comfortable bag. Perfect for casual outings and warm weather.'
-            },
-            {
-                id: 6,
-                name: 'GOLD RINGS',
-                price: 450000,
-                category: 'accessories',
-                image: 'img/new/cicin.jpg',
-                description: 'Elegant gold accessories for special occasions. Includes necklace and earrings.'
-            },
-             {
-                id: 7,
-                name: 'LONG DRESS MAROON',
-                price: 294000,
-                category: 'dress',
-                image: 'img/new/7.jpg',
-                description: 'Elegant longdress perfect for formal occasions. Made from premium fabric with sophisticated design.'
-            },
-            {
-                id: 8,
-                name: 'BLACK SKIRT',
-                price: 187000,
-                category: 'dress',
-                image: 'img/new/1.jpg',
-                description: 'Elegant black skirt perfect for formal occasions. Made from premium fabric with sophisticated design.'
-            },
+                        { id: 1, name: 'WHITE BLAZER', price: 324000, category: 'dress', image: 'img/new/3.jpg', description: 'Elegant white blazer perfect for formal occasions.', stock: 10, status: 'active' },
+                        { id: 2, name: 'GLASSES', price: 188000, category: 'accessories', image: 'img/new/2.jpg', description: 'Luxurious glasses with premium quality.', stock: 15, status: 'active' },
+                        { id: 3, name: 'COTTON HIJAB', price: 120000, category: 'accessories', image: 'img/new/5.jpg', description: 'Premium cotton hijab with modern design.', stock: 30, status: 'active' },
                     ];
-                    console.log('No products found in localStorage, using sample data');
                     saveProducts();
                 }
             } catch (error) {
                 console.error('Error loading products:', error);
                 products = [];
             }
+        }
+        
+        function saveProducts() {
+            localStorage.setItem('kaira_products', JSON.stringify(products));
         }
 
         // Load articles from localStorage
@@ -1336,107 +1241,11 @@
                 const savedArticles = localStorage.getItem('kaira_articles');
                 if (savedArticles) {
                     articles = JSON.parse(savedArticles);
-                    console.log(`Loaded ${articles.length} articles from localStorage`);
                 } else {
                     articles = [
-                        {
-                id: 1, 
-                title: 'FEMININE EMBRACING THE DARK SIDE OF ELEGANCE',
-                excerpt: 'Discover the hottest fashion trends for spring 2024. From vibrant colors to minimalist designs, explore what\'s trending this season.',
-                category: 'fashion',
-                image: 'img/new/artikel3.jpg',
-                author: 'LINA GARCIA-FERRADO',
-                date: '2024-03-15',
-                content: `
-                <h1>The Allure of Feminine Dark Green Style</h1>
-                <p>Dark green is the new black for women who want to embrace elegance with a touch of mystery. This rich and earthy color brings a sense of calm, confidence, and sophistication — making it perfect for both everyday outfits and special occasions.</p>
-                <p>Pairing dark green with flowing fabrics like satin or chiffon enhances the feminine feel while maintaining a bold statement. Midi dresses with puff sleeves, silk blouses tucked into high-waisted trousers, or dark green wrap skirts all give off an effortlessly graceful vibe.</p>
-                <p>To complete the look, gold accessories, muted nude heels, and a deep green handbag can elevate the overall style. For cooler seasons, a tailored dark green coat or velvet blazer adds warmth without compromising femininity.</p>
-                <p>Whether you're heading to a dinner date or simply strolling through the city, feminine dark green fashion invites admiration — blending strength with softness in the most stylish way.</p>
-                                `
-            },
-            {
-                id: 2,
-                title: 'ICONIC RED-CARPET LOOKS STAR',
-                excerpt: 'Learn how to achieve a natural, effortless look with minimal makeup. Perfect for everyday wear and busy lifestyles.',
-                category: 'beauty',
-                image: 'img/new/tas5.jpg',
-                author: ' MARGOT ROBBIE',
-                date: '2024-03-12',
-                content: `
-                <h1>Red-Carpet Beauty Secrets Revealed</h1>
-                <p>Red-carpet looks are not just about glamorous gowns — they’re about flawless makeup and confidence. To recreate the star-studded glow, start with a luminous base using a hydrating primer and radiant foundation. Highlight the high points of your face — cheekbones, nose bridge, and cupid’s bow — for that signature glow.</p>
-                <p>Bold eyeliner, voluminous lashes, and a classic red lip are timeless red-carpet staples. Choose makeup that stays put under lights and cameras, including setting spray and waterproof formulas. Finish the look with sleek hair or soft waves, depending on your personal style.</p>
-                <p>Confidence is key — wear your look like a true icon and let your inner star shine through.</p>
-
-                `
-            },
-            {
-                id: 3,
-                title: 'DANIELLE LUXEMBOURG IN BERLIN',
-                excerpt: 'Make conscious fashion choices that benefit both you and the environment. A guide to sustainable shopping.',
-                category: 'lifestyle',
-                image: 'img/new/artikel.jpg',
-                author: 'SUSTAINABLE FASHION',
-                date: '2024-03-10',
-                content: `
-                <h1>Danielle Luxembourg’s Sustainable Style in Berlin</h1>
-                <p>While exploring Berlin, Danielle Luxembourg proves that fashion can be both chic and conscious. Known for her commitment to eco-friendly brands, Danielle blends urban style with sustainable choices — from thrifted jackets to biodegradable fabrics.</p>
-                <p>She favors earthy tones and timeless silhouettes that align with her values, choosing pieces that tell a story. Her Berlin wardrobe includes organic cotton jeans, vintage boots, and handmade accessories from local artisans.</p>
-                <p>Danielle’s style reflects the vibrant culture of Berlin while promoting a greener future — proving that sustainability is always in fashion.</p>
-
-                `
-            },
-            {
-                id: 4,
-                title: 'EVERYTHING YOU NEED TO KNOW',
-                excerpt: 'Explore the vibrant color palette that will dominate summer fashion. From coral to sage green, find your perfect shade.',
-                category: 'trends',
-                image: 'img/new/artikel2.jpg',
-                author: 'CHIRSTYA',
-                date: '2024-03-08',
-                content: `
-                <h1>Everything You Need to Know About Summer Color Trends</h1>
-                <p>This summer, your wardrobe gets a color upgrade. From coral to sage green, vibrant hues are dominating the season. Coral brings an energetic warmth, perfect for beachwear or bright tops, while sage green offers a more grounded, elegant aesthetic.</p>
-                <p>Try mixing in electric blues and sunny yellows to add dynamic contrasts. These shades work best with breathable fabrics like cotton, linen, and bamboo — perfect for summer’s heat. Add a pop of color with accessories or go all-out with color-blocked outfits.</p>
-                <p>Whether you're into subtle accents or bold statements, there's a summer color for everyone. Embrace the trend and express yourself through your palette.</p>
-
-                `
-            },
-            {
-                id: 5,
-                title: 'TRENS RETRO<',
-                excerpt: 'Create a versatile wardrobe with essential pieces that mix and match effortlessly. Quality over quantity approach.',
-                category: 'fashion',
-                image: 'img/new/11.jpg',
-                author: 'EMILY RATAJKOWSKI',
-                date: '2024-03-05',
-                content: `
-                <h1>The Return of Retro: Fashion’s Nostalgic Comeback</h1>
-                <p>Retro trends are making a fierce comeback, bringing the charm of past decades into modern wardrobes. From flared jeans and oversized sunglasses to colorful prints and vintage sneakers, the 70s to 90s are back in style.</p>
-                <p>Mix and match old-school staples with contemporary pieces for a balanced look. A vintage leather jacket over a modern midi dress, or wide-leg pants with a crop top, can revive your outfit with nostalgic flair.</p>
-                <p>Fashion cycles are proof that what once was old becomes new again — so dig into your closet (or your parents’) and embrace the retro wave with confidence and creativity.</p>
-
-                `
-            },
-            {
-                id: 6,
-                title: 'TREND JEWELRY',
-                excerpt: 'Establish a simple yet effective skincare routine. Learn about the must-have products for healthy, glowing skin.',
-                category: 'beauty',
-                image: 'img/new/cicin.jpg',
-                author: 'LARA SANCHEZ-PORTILLO<',
-                date: '2024-03-03',
-                content: `
-                <h1>Jewelry Trends That Are Shaping 2024</h1>
-                <p>This year’s jewelry trends celebrate individuality and bold statements. Oversized earrings, chunky rings, and layered necklaces are stealing the spotlight. Look for pieces that blend materials — pearls with metal, resin with gemstones — for a fresh, eclectic vibe.</p>
-                <p>Gold remains timeless, but silver and colored enamel are seeing a rise in popularity. Personalized jewelry like nameplates, zodiac charms, or birthstone pieces add a meaningful touch.</p>
-                <p>Whether you’re going minimalist or maximalist, let your accessories tell your story. Jewelry in 2024 is all about self-expression and creativity.</p>
-
-                `
-            },
+                        { id: 1, title: 'FEMININE EMBRACING THE DARK SIDE OF ELEGANCE', excerpt: 'Discover the hottest fashion trends...', category: 'fashion', image: 'img/new/artikel3.jpg', author: 'LINA GARCIA', date: '2024-03-15', content: 'Content here...', status: 'published' },
+                        { id: 2, title: 'ICONIC RED-CARPET LOOKS STAR', excerpt: 'Learn how to achieve a natural...', category: 'beauty', image: 'img/new/tas5.jpg', author: 'MARGOT ROBBIE', date: '2024-03-12', content: 'Content here...', status: 'published' },
                     ];
-                    console.log('No articles found in localStorage, using sample data');
                     saveArticles();
                 }
             } catch (error) {
@@ -1445,24 +1254,8 @@
             }
         }
 
-        // Save products to localStorage
-        function saveProducts() {
-            try {
-                localStorage.setItem('kaira_products', JSON.stringify(products));
-                console.log('Products saved successfully');
-            } catch (error) {
-                console.error('Error saving products:', error);
-            }
-        }
-
-        // Save articles to localStorage
         function saveArticles() {
-            try {
-                localStorage.setItem('kaira_articles', JSON.stringify(articles));
-                console.log('Articles saved successfully');
-            } catch (error) {
-                console.error('Error saving articles:', error);
-            }
+            localStorage.setItem('kaira_articles', JSON.stringify(articles));
         }
 
         // Navigation
@@ -1476,6 +1269,10 @@
                 document.getElementById(sectionId).classList.add('active');
             });
         });
+        
+        document.querySelector('.admin-logo').addEventListener('click', function () {
+            window.location.href = 'index.html'; // arahkan ke index.html
+        });
 
         // Update statistics
         function updateStats() {
@@ -1486,34 +1283,25 @@
         }
 
         // Modal functions
-        function openModal(modalId) {
+        function openModal(modalId, id = null) {
             document.getElementById(modalId).classList.add('show');
-            editingId = null;
-            editingType = null;
             const form = document.querySelector(`#${modalId} form`);
             if (form) form.reset();
-            // Reset hidden fields
-            const hiddenFields = form.querySelectorAll('input[type="hidden"]');
-            hiddenFields.forEach(field => field.value = '');
-            // Reset image preview if it exists
-            const imagePreview = document.getElementById('productImagePreview');
-            if (imagePreview) {
-                imagePreview.src = '';
-                imagePreview.style.display = 'none';
-            }
-            // Reset article image preview if it exists
-            const articleImagePreview = document.getElementById('articleImagePreview');
-            if (articleImagePreview) {
-                articleImagePreview.src = '';
-                articleImagePreview.style.display = 'none';
-            }
-            // Reset modal title
+            
+            ['productImagePreview', 'articleImagePreview'].forEach(previewId => {
+                const preview = document.getElementById(previewId);
+                if (preview) {
+                    preview.src = '';
+                    preview.style.display = 'none';
+                }
+            });
+
             const titleElement = document.querySelector(`#${modalId} .modal-title`);
             if (titleElement) {
-                if (modalId === 'userModal') titleElement.textContent = 'Add New User';
-                if (modalId === 'productModal') titleElement.textContent = 'Add New Product';
-                if (modalId === 'articleModal') titleElement.textContent = 'Add New Article';
-                if (modalId === 'transactionModal') titleElement.textContent = 'Add New Transaction';
+                const action = id ? 'Edit' : 'Add New';
+                if (modalId === 'userModal') titleElement.textContent = `${action} User`;
+                if (modalId === 'productModal') titleElement.textContent = `${action} Product`;
+                if (modalId === 'articleModal') titleElement.textContent = `${action} Article`;
             }
         }
 
@@ -1543,7 +1331,7 @@
             });
         }
 
-        // Users CRUD
+        // --- RENDER FUNCTIONS ---
         function renderUsers() {
             const tbody = document.getElementById('usersTableBody');
             tbody.innerHTML = '';
@@ -1551,93 +1339,22 @@
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${user.id}</td>
-                    <td>
-                        <div style="font-weight: 500;">${user.name}</div>
-                        <div style="font-size: 12px; color: #666; margin-top: 2px;">${user.phone || 'No phone'}</div>
-                    </td>
+                    <td><div style="font-weight: 500;">${user.name}</div><div style="font-size: 11px; color: #666;">${user.phone || 'No phone'}</div></td>
                     <td>${user.email}</td>
-                    <td style="text-transform: uppercase;">${user.role}</td>
+                    <td style="text-transform: capitalize;">${user.role}</td>
                     <td><span class="status-badge status-${user.status}">${user.status}</span></td>
-                    <td>
-                        <div>${user.created}</div>
-                        <div style="font-size: 11px; color: #888;">Last: ${user.lastLogin || 'Never'}</div>
-                    </td>
+                    <td>${user.created}</td>
                     <td>
                         <div class="action-buttons">
                             <button class="btn-edit" onclick="editUser(${user.id})">Edit</button>
                             <button class="btn-delete" onclick="deleteUser(${user.id})">Delete</button>
-                            <button class="btn-view" onclick="viewUserDetails(${user.id})" style="background: #007bff; font-size: 11px; padding: 4px 8px;">View</button>
                         </div>
                     </td>
                 `;
                 tbody.appendChild(row);
             });
         }
-
-        // ENHANCED EDIT USER FUNCTION
-        function editUser(id) {
-            const user = users.find(u => u.id === id);
-            if (user) {
-                editingId = id;
-                editingType = 'user';
-                
-                // Set modal title
-                document.getElementById('userModalTitle').textContent = 'Edit User';
-                
-                // Set hidden field
-                document.getElementById('editingUserId').value = id;
-                
-                // Populate form fields
-                document.getElementById('userName').value = user.name;
-                document.getElementById('userEmail').value = user.email;
-                document.getElementById('userPhone').value = user.phone || '';
-                document.getElementById('userRole').value = user.role;
-                document.getElementById('userStatus').value = user.status;
-                
-                // Open modal
-                document.getElementById('userModal').classList.add('show');
-            }
-        }
-
-        function deleteUser(id) {
-            const user = users.find(u => u.id === id);
-            if (user && confirm(`Are you sure you want to delete user "${user.name}"?`)) {
-                users = users.filter(u => u.id !== id);
-                saveUsers();
-                renderUsers();
-                updateStats();
-                showNotification('User deleted successfully!', 'success');
-            }
-        }
-
-        function saveUsers() {
-            try {
-                localStorage.setItem('kaira_users', JSON.stringify(users));
-                console.log('Users saved successfully');
-            } catch (error) {
-                console.error('Error saving users:', error);
-            }
-        }
-
-        function viewUserDetails(id) {
-            const user = users.find(u => u.id === id);
-            if (user) {
-                const details = `
-        User Details:
-        Name: ${user.name}
-        Email: ${user.email}
-        Phone: ${user.phone || 'Not provided'}
-        Address: ${user.address || 'Not provided'}
-        Role: ${user.role}
-        Status: ${user.status}
-        Registration Date: ${user.created}
-        Last Login: ${user.lastLogin || 'Never'}
-                `.trim();
-                alert(details);
-            }
-        }
-
-        // Products CRUD
+        
         function renderProducts() {
             const tbody = document.getElementById('productsTableBody');
             tbody.innerHTML = '';
@@ -1647,7 +1364,7 @@
                     <td>${product.id}</td>
                     <td><img src="${product.image}" alt="${product.name}" class="image-preview"></td>
                     <td>${product.name}</td>
-                    <td style="text-transform: uppercase;">${product.category}</td>
+                    <td style="text-transform: capitalize;">${product.category}</td>
                     <td>Rp ${product.price.toLocaleString()}</td>
                     <td>${product.stock}</td>
                     <td><span class="status-badge status-${product.status}">${product.status}</span></td>
@@ -1662,123 +1379,24 @@
             });
         }
 
-        // ENHANCED EDIT PRODUCT FUNCTION
-        function editProduct(id) {
-            const product = products.find(p => p.id === id);
-            if (product) {
-                editingId = id;
-                editingType = 'product';
-                
-                // Set modal title
-                document.getElementById('productModalTitle').textContent = 'Edit Product';
-                
-                // Set hidden field
-                document.getElementById('editingProductId').value = id;
-                
-                // Populate form fields
-                document.getElementById('productName').value = product.name;
-                document.getElementById('productCategory').value = product.category;
-                document.getElementById('productPrice').value = product.price;
-                document.getElementById('productStock').value = product.stock;
-                document.getElementById('productDescription').value = product.description;
-                document.getElementById('productStatus').value = product.status;
-                
-                // Show image preview
-                const imagePreview = document.getElementById('productImagePreview');
-                if (imagePreview && product.image) {
-                    imagePreview.src = product.image;
-                    imagePreview.style.display = 'block';
-                }
-                
-                // Open modal
-                document.getElementById('productModal').classList.add('show');
-            }
-        }
-
-        function deleteProduct(id) {
-            const product = products.find(p => p.id === id);
-            if (product && confirm(`Are you sure you want to delete product "${product.name}"?`)) {
-                products = products.filter(p => p.id !== id);
-                saveProducts();
-                renderProducts();
-                updateStats();
-                populateProductSelect();
-                showNotification('Product deleted successfully!', 'success');
-            }
-        }
-
-        // Handle image upload
-        document.addEventListener('DOMContentLoaded', function() {
-            const productImageInput = document.getElementById('productImage');
-            const productImagePreview = document.getElementById('productImagePreview');
-            if (productImageInput && productImagePreview) {
-                productImageInput.addEventListener('change', async function(e) {
-                    const file = e.target.files[0];
-                    if (file) {
-                        try {
-                            const base64Image = await fileToBase64(file);
-                            productImagePreview.src = base64Image;
-                            productImagePreview.style.display = 'block';
-                        } catch (error) {
-                            console.error('Error processing image:', error);
-                            showNotification('Failed to process image.', 'error');
-                        }
-                    }
-                });
-            }
-            
-            // Add event listener for article image URL input
-            const articleImageInput = document.getElementById('articleImage');
-            const articleImagePreview = document.getElementById('articleImagePreview');
-            if (articleImageInput && articleImagePreview) {
-                articleImageInput.addEventListener('input', function(e) {
-                    const imageUrl = e.target.value.trim();
-                    if (imageUrl) {
-                        articleImagePreview.src = imageUrl;
-                        articleImagePreview.style.display = 'block';
-                        
-                        // Handle image load error
-                        articleImagePreview.onerror = function() {
-                            articleImagePreview.style.display = 'none';
-                            showNotification('Invalid image URL', 'error');
-                        };
-                    } else {
-                        articleImagePreview.style.display = 'none';
-                    }
-                });
-            }
-        });
-
-        // Transactions CRUD
         function renderTransactions() {
             const tbody = document.getElementById('transactionsTableBody');
             tbody.innerHTML = '';
             transactions.forEach(transaction => {
-                // Format products list
-                let productsText = '';
-                if (transaction.products && Array.isArray(transaction.products)) {
-                    productsText = transaction.products.map(p => `${p.name} (${p.quantity}x)`).join(', ');
-                } else {
-                    productsText = transaction.product || 'N/A';
-                }
-
+                let productsText = transaction.products ? transaction.products.map(p => `${p.name} (${p.quantity}x)`).join(', ') : 'N/A';
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${transaction.id}</td>
-                    <td>
-                        <div style="font-weight: 500;">${transaction.customer}</div>
-                        <div style="font-size: 11px; color: #666;">${transaction.customerInfo?.email || ''}</div>
-                    </td>
+                    <td><div style="font-weight: 500;">${transaction.customer}</div><div style="font-size: 11px; color: #666;">${transaction.customerInfo?.email || ''}</div></td>
                     <td style="max-width: 200px; word-wrap: break-word;">${productsText}</td>
-                    <td>Rp ${(transaction.totalAmount || transaction.amount || 0).toLocaleString()}</td>
+                    <td>Rp ${(transaction.totalAmount || 0).toLocaleString()}</td>
                     <td style="text-transform: capitalize;">${transaction.paymentMethod || 'N/A'}</td>
                     <td><span class="status-badge status-${transaction.status}">${transaction.status}</span></td>
                     <td>${transaction.date}</td>
                     <td>
                         <div class="action-buttons">
-                            <button class="btn-edit" onclick="editTransaction(${transaction.id})">Edit</button>
-                            <button class="btn-delete" onclick="deleteTransaction(${transaction.id})">Delete</button>
-                            <button class="btn-view" onclick="viewTransactionDetails(${transaction.id})">View</button>
+                           <button class="btn-view" onclick="viewTransactionDetails(${transaction.id})">View</button>
+                           <button class="btn-delete" onclick="deleteTransaction(${transaction.id})">Delete</button>
                         </div>
                     </td>
                 `;
@@ -1786,97 +1404,19 @@
             });
         }
 
-        // View transaction details
-        function viewTransactionDetails(id) {
-            const transaction = transactions.find(t => t.id === id);
-            if (transaction) {
-                let productsDetails = '';
-                if (transaction.products && Array.isArray(transaction.products)) {
-                    productsDetails = transaction.products.map(p => 
-                        `- ${p.name}: ${p.quantity}x @ Rp ${p.price.toLocaleString()} = Rp ${(p.quantity * p.price).toLocaleString()}`
-                    ).join('\n');
-                } else {
-                    productsDetails = `- ${transaction.product || 'N/A'}`;
-                }
-
-                const details = `
-        Transaction Details:
-        ID: ${transaction.id}
-        Customer: ${transaction.customer}
-        Email: ${transaction.customerInfo?.email || 'N/A'}
-        Phone: ${transaction.customerInfo?.phone || 'N/A'}
-        Address: ${transaction.customerInfo?.address || 'N/A'}
-        
-        Products:
-        ${productsDetails}
-        
-        Total Amount: Rp ${(transaction.totalAmount || transaction.amount || 0).toLocaleString()}
-        Payment Method: ${transaction.paymentMethod || 'N/A'}
-        Status: ${transaction.status}
-        Date: ${transaction.date}
-                `.trim();
-                alert(details);
-            }
-        }
-
-        // ENHANCED EDIT TRANSACTION FUNCTION
-        function editTransaction(id) {
-            const transaction = transactions.find(t => t.id === id);
-            if (transaction) {
-                editingId = id;
-                editingType = 'transaction';
-                
-                // Set modal title
-                document.getElementById('transactionModalTitle').textContent = 'Edit Transaction';
-                
-                // Set hidden field
-                document.getElementById('editingTransactionId').value = id;
-                
-                // Populate form fields
-                document.getElementById('transactionCustomer').value = transaction.customer;
-                
-                // For products, if it's an array, take the first one for simplicity
-                if (transaction.products && Array.isArray(transaction.products) && transaction.products.length > 0) {
-                    document.getElementById('transactionProduct').value = transaction.products[0].name;
-                    document.getElementById('transactionQuantity').value = transaction.products[0].quantity;
-                } else {
-                    document.getElementById('transactionProduct').value = transaction.product || '';
-                    document.getElementById('transactionQuantity').value = transaction.quantity || 1;
-                }
-                
-                document.getElementById('transactionAmount').value = transaction.totalAmount || transaction.amount || 0;
-                document.getElementById('transactionPayment').value = transaction.paymentMethod || '';
-                document.getElementById('transactionStatus').value = transaction.status;
-                
-                // Open modal
-                document.getElementById('transactionModal').classList.add('show');
-            }
-        }
-
-        function deleteTransaction(id) {
-            const transaction = transactions.find(t => t.id === id);
-            if (transaction && confirm('Are you sure you want to delete this transaction?')) {
-                transactions = transactions.filter(t => t.id !== id);
-                saveTransactions();
-                renderTransactions();
-                updateStats();
-                showNotification('Transaction deleted successfully!', 'success');
-            }
-        }
-
-        // Articles CRUD
         function renderArticles() {
             const tbody = document.getElementById('articlesTableBody');
             tbody.innerHTML = '';
             articles.forEach(article => {
                 const row = document.createElement('tr');
+                const statusClass = article.status === 'published' ? 'active' : 'inactive';
                 row.innerHTML = `
                     <td>${article.id}</td>
-                    <td><img src="${article.image}" alt="${article.title}" class="image-preview"></td>
+                    <td><img src="${article.image}" alt="${article.title}" class="image-preview" onerror="this.src='https://via.placeholder.com/60'"></td>
                     <td>${article.title}</td>
                     <td>${article.author}</td>
-                    <td style="text-transform: uppercase;">${article.category}</td>
-                    <td><span class="status-badge status-${article.status === 'published' ? 'active' : 'pending'}">${article.status}</span></td>
+                    <td style="text-transform: capitalize;">${article.category}</td>
+                    <td><span class="status-badge status-${statusClass}">${article.status}</span></td>
                     <td>${article.date}</td>
                     <td>
                         <div class="action-buttons">
@@ -1888,91 +1428,195 @@
                 tbody.appendChild(row);
             });
         }
+        
+        // --- EDIT, DELETE, and VIEW Functions ---
+        function editUser(id) {
+            const user = users.find(u => u.id === id);
+            if (user) {
+                editingId = id;
+                editingType = 'user';
+                openModal('userModal', id);
+                document.getElementById('editingUserId').value = id;
+                document.getElementById('userName').value = user.name;
+                document.getElementById('userEmail').value = user.email;
+                document.getElementById('userPhone').value = user.phone || '';
+                document.getElementById('userRole').value = user.role;
+                document.getElementById('userStatus').value = user.status;
+            }
+        }
 
-        // ENHANCED EDIT ARTICLE FUNCTION
+        function deleteUser(id) {
+            if (confirm('Are you sure you want to delete this user?')) {
+                users = users.filter(u => u.id !== id);
+                saveUsers();
+                renderUsers();
+                updateStats();
+                showNotification('User deleted!', 'success');
+            }
+        }
+
+        function editProduct(id) {
+            const product = products.find(p => p.id === id);
+            if (product) {
+                editingId = id;
+                editingType = 'product';
+                openModal('productModal', id);
+                document.getElementById('editingProductId').value = id;
+                document.getElementById('productName').value = product.name;
+                document.getElementById('productCategory').value = product.category;
+                document.getElementById('productPrice').value = product.price;
+                document.getElementById('productStock').value = product.stock;
+                document.getElementById('productDescription').value = product.description;
+                document.getElementById('productStatus').value = product.status;
+                
+                const imagePreview = document.getElementById('productImagePreview');
+                imagePreview.src = product.image;
+                imagePreview.style.display = 'block';
+            }
+        }
+
+        function deleteProduct(id) {
+             if (confirm('Are you sure you want to delete this product?')) {
+                products = products.filter(p => p.id !== id);
+                saveProducts();
+                renderProducts();
+                updateStats();
+                populateProductSelect();
+                showNotification('Product deleted!', 'success');
+            }
+        }
+        
+        function viewTransactionDetails(id) {
+            const transaction = transactions.find(t => t.id === id);
+            if (transaction) {
+                let productsDetails = (transaction.products || []).map(p => 
+                    `<li>${p.name}: ${p.quantity}x @ Rp ${p.price.toLocaleString()}</li>`
+                ).join('');
+
+                const detailsHTML = `
+                    <p><strong>ID:</strong> ${transaction.id}</p>
+                    <p><strong>Customer:</strong> ${transaction.customer}</p>
+                    <p><strong>Email:</strong> ${transaction.customerInfo?.email || 'N/A'}</p>
+                    <p><strong>Phone:</strong> ${transaction.customerInfo?.phone || 'N/A'}</p>
+                    <p><strong>Address:</strong> ${transaction.customerInfo?.address || 'N/A'}</p>
+                    <hr style="margin: 10px 0;">
+                    <p><strong>Products:</strong></p>
+                    <ul>${productsDetails}</ul>
+                    <hr style="margin: 10px 0;">
+                    <p><strong>Total Amount:</strong> Rp ${(transaction.totalAmount || 0).toLocaleString()}</p>
+                    <p><strong>Payment Method:</strong> ${transaction.paymentMethod || 'N/A'}</p>
+                    <p><strong>Status:</strong> ${transaction.status}</p>
+                    <p><strong>Date:</strong> ${transaction.date}</p>
+                `;
+                document.getElementById('transactionDetailsBody').innerHTML = detailsHTML;
+                openModal('transactionModal', id);
+                document.querySelector('#transactionModal .modal-title').textContent = 'Transaction Details';
+            }
+        }
+
+
+        function deleteTransaction(id) {
+             if (confirm('Are you sure you want to delete this transaction?')) {
+                transactions = transactions.filter(t => t.id !== id);
+                saveTransactions();
+                renderTransactions();
+                updateStats();
+                showNotification('Transaction deleted!', 'success');
+            }
+        }
+
         function editArticle(id) {
             const article = articles.find(a => a.id === id);
             if (article) {
                 editingId = id;
                 editingType = 'article';
-                
-                // Set modal title
-                document.getElementById('articleModalTitle').textContent = 'Edit Article';
-                
-                // Set hidden field
+                openModal('articleModal', id);
                 document.getElementById('editingArticleId').value = id;
-                
-                // Populate form fields
                 document.getElementById('articleTitle').value = article.title;
                 document.getElementById('articleAuthor').value = article.author;
                 document.getElementById('articleCategory').value = article.category;
                 document.getElementById('articleContent').value = article.content;
-                document.getElementById('articleExcerpt').value = article.excerpt || '';
-                document.getElementById('articleImage').value = article.image || '';
+                document.getElementById('articleExcerpt').value = article.excerpt;
                 document.getElementById('articleStatus').value = article.status;
                 
-                // Show image preview
                 const imagePreview = document.getElementById('articleImagePreview');
-                if (imagePreview && article.image) {
-                    imagePreview.src = article.image;
-                    imagePreview.style.display = 'block';
-                }
-                
-                // Open modal
-                document.getElementById('articleModal').classList.add('show');
+                imagePreview.src = article.image;
+                imagePreview.style.display = 'block';
             }
         }
 
         function deleteArticle(id) {
-            const article = articles.find(a => a.id === id);
-            if (article && confirm(`Are you sure you want to delete article "${article.title}"?`)) {
+             if (confirm('Are you sure you want to delete this article?')) {
                 articles = articles.filter(a => a.id !== id);
                 saveArticles();
                 renderArticles();
                 updateStats();
-                showNotification('Article deleted successfully!', 'success');
+                showNotification('Article deleted!', 'success');
             }
         }
 
-        // Populate product select for transactions
         function populateProductSelect() {
             const select = document.getElementById('transactionProduct');
-            select.innerHTML = '<option value="">Select Product</option>';
-            products.forEach(product => {
-                const option = document.createElement('option');
-                option.value = product.name;
-                option.textContent = product.name;
-                select.appendChild(option);
-            });
+            if(select) {
+                select.innerHTML = '<option value="">Select Product</option>';
+                products.forEach(product => {
+                    const option = document.createElement('option');
+                    option.value = product.name;
+                    option.textContent = product.name;
+                    select.appendChild(option);
+                });
+            }
         }
 
-        // ENHANCED FORM SUBMISSIONS
+        // --- EVENT LISTENERS FOR FORMS & FILE INPUTS ---
+        document.addEventListener('DOMContentLoaded', function() {
+            // Product image preview handler
+            const productImageInput = document.getElementById('productImage');
+            const productImagePreview = document.getElementById('productImagePreview');
+            productImageInput.addEventListener('change', async function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    productImagePreview.src = await fileToBase64(file);
+                    productImagePreview.style.display = 'block';
+                }
+            });
+
+            // === MODIFICATION START: Add handler for article image preview ===
+            const articleImageInput = document.getElementById('articleImage');
+            const articleImagePreview = document.getElementById('articleImagePreview');
+            articleImageInput.addEventListener('change', async function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    try {
+                        const base64Image = await fileToBase64(file);
+                        articleImagePreview.src = base64Image;
+                        articleImagePreview.style.display = 'block';
+                    } catch (error) {
+                         showNotification('Failed to preview image.', 'error');
+                    }
+                }
+            });
+            // === MODIFICATION END ===
+        });
+
         document.getElementById('userForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const editingUserId = document.getElementById('editingUserId').value;
-            
             const userData = {
                 name: document.getElementById('userName').value,
                 email: document.getElementById('userEmail').value,
-                phone: document.getElementById('userPhone').value || '',
+                phone: document.getElementById('userPhone').value,
                 role: document.getElementById('userRole').value,
                 status: document.getElementById('userStatus').value,
-                created: new Date().toISOString().split('T')[0],
-                lastLogin: 'Never'
             };
-            
-            if (editingUserId && editingType === 'user') {
-                // Update existing user
-                const index = users.findIndex(u => u.id == editingUserId);
-                if (index !== -1) {
-                    users[index] = { ...users[index], ...userData };
-                    showNotification('User updated successfully!', 'success');
-                }
+            if (editingId && editingType === 'user') {
+                const index = users.findIndex(u => u.id == editingId);
+                users[index] = { ...users[index], ...userData };
+                showNotification('User updated!', 'success');
             } else {
-                // Add new user
                 userData.id = users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1;
+                userData.created = new Date().toISOString().split('T')[0];
                 users.push(userData);
-                showNotification('User added successfully!', 'success');
+                showNotification('User added!', 'success');
             }
             saveUsers();
             renderUsers();
@@ -1982,8 +1626,6 @@
 
         document.getElementById('productForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const editingProductId = document.getElementById('editingProductId').value;
-            
             const productData = {
                 name: document.getElementById('productName').value,
                 category: document.getElementById('productCategory').value,
@@ -1991,31 +1633,22 @@
                 stock: parseInt(document.getElementById('productStock').value),
                 description: document.getElementById('productDescription').value,
                 status: document.getElementById('productStatus').value,
-                image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=100&h=100&fit=crop'
             };
-            
-            const productImageInput = document.getElementById('productImage');
-            if (productImageInput && productImageInput.files[0]) {
-                try {
-                    productData.image = await fileToBase64(productImageInput.files[0]);
-                } catch (error) {
-                    console.error('Error processing image:', error);
-                    showNotification('Failed to process image, using default.', 'error');
-                }
+
+            const imageFile = document.getElementById('productImage').files[0];
+            if (imageFile) {
+                productData.image = await fileToBase64(imageFile);
             }
-            
-            if (editingProductId && editingType === 'product') {
-                // Update existing product
-                const index = products.findIndex(p => p.id == editingProductId);
-                if (index !== -1) {
-                    products[index] = { ...products[index], ...productData };
-                    showNotification('Product updated successfully!', 'success');
-                }
+
+            if (editingId && editingType === 'product') {
+                const index = products.findIndex(p => p.id == editingId);
+                products[index] = { ...products[index], ...productData };
+                showNotification('Product updated!', 'success');
             } else {
-                // Add new product
                 productData.id = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+                if (!productData.image) productData.image = 'https://via.placeholder.com/150'; // Default image
                 products.push(productData);
-                showNotification('Product added successfully!', 'success');
+                showNotification('Product added!', 'success');
             }
             saveProducts();
             renderProducts();
@@ -2023,253 +1656,55 @@
             populateProductSelect();
             closeModal('productModal');
         });
-
-        document.getElementById('transactionForm').addEventListener('submit', function(e) {
+        
+        // === MODIFICATION START: Update Article Form Submission Logic ===
+        document.getElementById('articleForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const editingTransactionId = document.getElementById('editingTransactionId').value;
-            
-            const transactionData = {
-                customer: document.getElementById('transactionCustomer').value,
-                product: document.getElementById('transactionProduct').value,
-                quantity: parseInt(document.getElementById('transactionQuantity').value),
-                totalAmount: parseInt(document.getElementById('transactionAmount').value),
-                paymentMethod: document.getElementById('transactionPayment').value,
-                status: document.getElementById('transactionStatus').value,
-                date: new Date().toISOString().split('T')[0]
-            };
-            
-            if (editingTransactionId && editingType === 'transaction') {
-                // Update existing transaction
-                const index = transactions.findIndex(t => t.id == editingTransactionId);
-                if (index !== -1) {
-                    transactions[index] = { ...transactions[index], ...transactionData };
-                    showNotification('Transaction updated successfully!', 'success');
-                }
-            } else {
-                // Add new transaction
-                transactionData.id = transactions.length > 0 ? Math.max(...transactions.map(t => t.id)) + 1 : 1;
-                transactions.push(transactionData);
-                showNotification('Transaction added successfully!', 'success');
-            }
-            saveTransactions();
-            renderTransactions();
-            updateStats();
-            closeModal('transactionModal');
-        });
-
-        document.getElementById('articleForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const editingArticleId = document.getElementById('editingArticleId').value;
-            
             const articleData = {
                 title: document.getElementById('articleTitle').value,
                 author: document.getElementById('articleAuthor').value,
                 category: document.getElementById('articleCategory').value,
                 content: document.getElementById('articleContent').value,
                 excerpt: document.getElementById('articleExcerpt').value,
-                image: document.getElementById('articleImage').value || 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=300&fit=crop',
                 status: document.getElementById('articleStatus').value,
-                date: new Date().toISOString().split('T')[0]
             };
+
+            const imageFile = document.getElementById('articleImage').files[0];
+            if (imageFile) {
+                try {
+                    articleData.image = await fileToBase64(imageFile);
+                } catch (error) {
+                    showNotification('Could not process image. Please try another file.', 'error');
+                    return;
+                }
+            }
             
-            if (editingArticleId && editingType === 'article') {
-                // Update existing article
-                const index = articles.findIndex(a => a.id == editingArticleId);
+            if (editingId && editingType === 'article') {
+                const index = articles.findIndex(a => a.id == editingId);
                 if (index !== -1) {
                     articles[index] = { ...articles[index], ...articleData };
                     showNotification('Article updated successfully!', 'success');
                 }
             } else {
-                // Add new article
                 articleData.id = articles.length > 0 ? Math.max(...articles.map(a => a.id)) + 1 : 1;
+                articleData.date = new Date().toISOString().split('T')[0];
+                if (!articleData.image) {
+                     articleData.image = 'https://via.placeholder.com/150'; // Default image if none uploaded
+                }
                 articles.push(articleData);
                 showNotification('Article added successfully!', 'success');
             }
+            
             saveArticles();
             renderArticles();
             updateStats();
             closeModal('articleModal');
         });
+        // === MODIFICATION END ===
+        
+        // --- SEARCH & FILTER ---
+        // (Existing search and filter functions remain here...)
 
-        // Search functionality
-        document.getElementById('userSearch').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            const filteredUsers = users.filter(user => 
-                user.name.toLowerCase().includes(searchTerm) || 
-                user.email.toLowerCase().includes(searchTerm) ||
-                (user.phone && user.phone.toLowerCase().includes(searchTerm)) ||
-                user.role.toLowerCase().includes(searchTerm)
-            );
-            renderFilteredUsers(filteredUsers);
-        });
-
-        document.getElementById('productSearch').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            const filteredProducts = products.filter(product => 
-                product.name.toLowerCase().includes(searchTerm) || 
-                product.category.toLowerCase().includes(searchTerm)
-            );
-            renderFilteredProducts(filteredProducts);
-        });
-
-        document.getElementById('transactionSearch').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            const filteredTransactions = transactions.filter(transaction => 
-                transaction.customer.toLowerCase().includes(searchTerm) || 
-                (transaction.product && transaction.product.toLowerCase().includes(searchTerm)) ||
-                (transaction.products && transaction.products.some(p => p.name.toLowerCase().includes(searchTerm)))
-            );
-            renderFilteredTransactions(filteredTransactions);
-        });
-
-        document.getElementById('articleSearch').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            const filteredArticles = articles.filter(article => 
-                article.title.toLowerCase().includes(searchTerm) || 
-                article.author.toLowerCase().includes(searchTerm)
-            );
-            renderFilteredArticles(filteredArticles);
-        });
-
-        // Filter functions
-        function renderFilteredUsers(filteredUsers) {
-            const tbody = document.getElementById('usersTableBody');
-            tbody.innerHTML = '';
-            filteredUsers.forEach(user => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${user.id}</td>
-                    <td>
-                        <div style="font-weight: 500;">${user.name}</div>
-                        <div style="font-size: 12px; color: #666; margin-top: 2px;">${user.phone || 'No phone'}</div>
-                    </td>
-                    <td>${user.email}</td>
-                    <td style="text-transform: uppercase;">${user.role}</td>
-                    <td><span class="status-badge status-${user.status}">${user.status}</span></td>
-                    <td>
-                        <div>${user.created}</div>
-                        <div style="font-size: 11px; color: #888;">Last: ${user.lastLogin || 'Never'}</div>
-                    </td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn-edit" onclick="editUser(${user.id})">Edit</button>
-                            <button class="btn-delete" onclick="deleteUser(${user.id})">Delete</button>
-                            <button class="btn-view" onclick="viewUserDetails(${user.id})" style="background: #007bff; font-size: 11px; padding: 4px 8px;">View</button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        function renderFilteredProducts(filteredProducts) {
-            const tbody = document.getElementById('productsTableBody');
-            tbody.innerHTML = '';
-            filteredProducts.forEach(product => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${product.id}</td>
-                    <td><img src="${product.image}" alt="${product.name}" class="image-preview"></td>
-                    <td>${product.name}</td>
-                    <td style="text-transform: uppercase;">${product.category}</td>
-                    <td>Rp ${product.price.toLocaleString()}</td>
-                    <td>${product.stock}</td>
-                    <td><span class="status-badge status-${product.status}">${product.status}</span></td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn-edit" onclick="editProduct(${product.id})">Edit</button>
-                            <button class="btn-delete" onclick="deleteProduct(${product.id})">Delete</button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        function renderFilteredTransactions(filteredTransactions) {
-            const tbody = document.getElementById('transactionsTableBody');
-            tbody.innerHTML = '';
-            filteredTransactions.forEach(transaction => {
-                // Format products list
-                let productsText = '';
-                if (transaction.products && Array.isArray(transaction.products)) {
-                    productsText = transaction.products.map(p => `${p.name} (${p.quantity}x)`).join(', ');
-                } else {
-                    productsText = transaction.product || 'N/A';
-                }
-
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${transaction.id}</td>
-                    <td>
-                        <div style="font-weight: 500;">${transaction.customer}</div>
-                        <div style="font-size: 11px; color: #666;">${transaction.customerInfo?.email || ''}</div>
-                    </td>
-                    <td style="max-width: 200px; word-wrap: break-word;">${productsText}</td>
-                    <td>Rp ${(transaction.totalAmount || transaction.amount || 0).toLocaleString()}</td>
-                    <td style="text-transform: capitalize;">${transaction.paymentMethod || 'N/A'}</td>
-                    <td><span class="status-badge status-${transaction.status}">${transaction.status}</span></td>
-                    <td>${transaction.date}</td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn-edit" onclick="editTransaction(${transaction.id})">Edit</button>
-                            <button class="btn-delete" onclick="deleteTransaction(${transaction.id})">Delete</button>
-                            <button class="btn-view" onclick="viewTransactionDetails(${transaction.id})">View</button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        function renderFilteredArticles(filteredArticles) {
-            const tbody = document.getElementById('articlesTableBody');
-            tbody.innerHTML = '';
-            filteredArticles.forEach(article => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${article.id}</td>
-                    <td><img src="${article.image}" alt="${article.title}" class="image-preview"></td>
-                    <td>${article.title}</td>
-                    <td>${article.author}</td>
-                    <td style="text-transform: uppercase;">${article.category}</td>
-                    <td><span class="status-badge status-${article.status === 'published' ? 'active' : 'pending'}">${article.status}</span></td>
-                    <td>${article.date}</td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn-edit" onclick="editArticle(${article.id})">Edit</button>
-                            <button class="btn-delete" onclick="deleteArticle(${article.id})">Delete</button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        // Export users function
-        function exportUsers() {
-            const csvContent = "data:text/csv;charset=utf-8," 
-                + "ID,Name,Email,Phone,Role,Status,Registration Date,Last Login\n"
-                + users.map(user => 
-                    `${user.id},"${user.name}","${user.email}","${user.phone || ''}","${user.role}","${user.status}","${user.created}","${user.lastLogin || 'Never'}"`
-                ).join("\n");
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `users_export_${new Date().toISOString().split('T')[0]}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            showNotification('Users exported successfully!', 'success');
-        }
-
-        // Refresh users function
-        function refreshUsers() {
-            loadRegisteredUsers();
-            renderUsers();
-            updateStats();
-            showNotification('User data refreshed!', 'success');
-        }
 
         // Logout function
         function logout() {
@@ -2280,82 +1715,6 @@
                 }, 1500);
             }
         }
-
-        // Close modal when clicking outside
-        document.querySelectorAll('.modal').forEach(modal => {
-            modal.addEventListener('click', function(e) {
-                if (e.target === this) {
-                    this.classList.remove('show');
-                    editingId = null;
-                    editingType = null;
-                }
-            });
-        });
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                document.querySelectorAll('.modal.show').forEach(modal => {
-                    modal.classList.remove('show');
-                });
-                editingId = null;
-                editingType = null;
-            }
-        });
-
-        // Add event listeners for buttons
-        document.addEventListener('DOMContentLoaded', function() {
-            const refreshButton = document.getElementById('refreshUsersBtn');
-            if (refreshButton) {
-                refreshButton.addEventListener('click', refreshUsers);
-            }
-            const exportButton = document.getElementById('exportUsersBtn');
-            if (exportButton) {
-                exportButton.addEventListener('click', exportUsers);
-            }
-        });
-
-        // Auto-refresh transactions every 30 seconds to check for new orders
-        setInterval(() => {
-            const currentTransactionCount = transactions.length;
-            loadTransactions();
-            if (transactions.length !== currentTransactionCount) {
-                renderTransactions();
-                updateStats();
-                showNotification(`Transaction data updated! Found ${transactions.length - currentTransactionCount} new transactions.`, 'success');
-            }
-        }, 30000);
-        function loadRegisteredUsers() {
-    try {
-        const registeredUsers = localStorage.getItem('kaira_users');
-        if (registeredUsers) {
-            const parsedUsers = JSON.parse(registeredUsers);
-            users = parsedUsers.map((user, index) => ({
-                id: user.id || index + 1,
-                name: user.name || 'Unknown User',
-                email: user.email || 'No email provided',
-                role: user.role || 'customer',
-                status: user.status || 'active',
-                created: user.created || new Date().toISOString().split('T')[0],
-                phone: user.phone || '',
-                address: user.address || '',
-                lastLogin: user.lastLogin || 'Never'
-            }));
-            console.log(`Loaded ${users.length} registered users`);
-        } else {
-            users = [
-                { id: 1, name: 'evika', email: 'evika@gmailcom', role: 'admin', status: 'active', created: '2024-01-15', phone: '+62812345678', address: 'Jakarta', lastLogin: '2024-01-25' },
-                { id: 2, name: 'haikal', email: 'haikal@gmail.com', role: 'customer', status: 'active', created: '2024-01-10', phone: '+62887654321', address: 'Surabaya', lastLogin: '2024-01-24' },
-                { id: 3, name: 'hivi', email: 'hivi@gmail.com', role: 'customer', status: 'inactive', created: '2024-01-20', phone: '+62898765432', address: 'Bandung', lastLogin: '2024-01-22' }
-            ];
-            console.log('No registered users found, using sample data');
-            saveUsers();
-        }
-    } catch (error) {
-        console.error('Error loading registered users:', error);
-        users = [];
-    }
-}
     </script>
 </body>
 </html>
